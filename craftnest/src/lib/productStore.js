@@ -6,6 +6,7 @@ let products = [...initialProducts];
 export function normalizeProduct(input = {}) {
   const name = (input.name || input.title || 'Handcrafted Artisan Craft').trim();
 
+  // Price MUST be seller's actual price. NEVER use suggestedPrice as selling price!
   const rawPrice = input.price !== undefined && input.price !== null 
     ? input.price 
     : (input.suggestedPrice !== undefined && input.suggestedPrice !== null ? input.suggestedPrice : 1500);
@@ -26,21 +27,26 @@ export function normalizeProduct(input = {}) {
     tags = rawTags.split(',').map(t => t.trim()).filter(Boolean);
   }
 
+  const rawQty = input.quantity !== undefined && input.quantity !== null ? Number(input.quantity) : 1;
+
   return {
     id: input.id || `p${Date.now()}`,
     name,
+    title: name,
     price,
+    suggestedPrice: input.suggestedPrice !== undefined ? Number(input.suggestedPrice) : null,
     currency: 'INR',
     category: input.category || 'Handcrafted',
     description: input.description || 'Authentic handcrafted piece crafted by traditional artisans.',
     image: input.image || '/images/products/pottery-1.jpg',
     artisanId: input.artisanId || "a_self",
-    artisanName: input.artisanName || (input.location ? `Artisan (${input.location})` : "You (Artisan)"),
+    artisanName: input.artisanName || input.sellerName || (input.location ? `Artisan (${input.location})` : "You (Artisan)"),
     rating: input.rating !== undefined ? input.rating : 5.0,
     reviews: input.reviews !== undefined ? input.reviews : 1,
     materials,
-    dimensions: input.dimensions || null,
-    quantity: input.quantity !== undefined && input.quantity !== null ? input.quantity : 1,
+    dimensions: input.dimensions || input.size || null,
+    size: input.size || input.dimensions || null,
+    quantity: isNaN(rawQty) ? 1 : Math.max(0, rawQty),
     location: input.location || null,
     careInstructions: input.careInstructions || null,
     tags,
@@ -64,3 +70,47 @@ export function addProduct(productData) {
   return newProduct;
 }
 
+export function purchaseProducts(cartItems = []) {
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
+    return { success: false, error: 'Cart is empty.' };
+  }
+
+  // 1. Verify availability for all items
+  for (const item of cartItems) {
+    const targetProduct = products.find(p => p.id === item.id);
+    if (!targetProduct) {
+      return { success: false, error: `Product "${item.name || item.id}" not found in inventory.` };
+    }
+    const currentStock = targetProduct.quantity !== undefined && targetProduct.quantity !== null ? Number(targetProduct.quantity) : 0;
+    const requestedQty = Number(item.quantity) || 1;
+
+    if (requestedQty > currentStock) {
+      return { 
+        success: false, 
+        error: `Requested quantity (${requestedQty}) for "${targetProduct.name || targetProduct.title}" exceeds available stock (${currentStock}).` 
+      };
+    }
+  }
+
+  // 2. Perform stock reduction
+  const purchasedSummary = [];
+  for (const item of cartItems) {
+    const targetProduct = products.find(p => p.id === item.id);
+    if (targetProduct) {
+      const currentStock = targetProduct.quantity !== undefined && targetProduct.quantity !== null ? Number(targetProduct.quantity) : 0;
+      const requestedQty = Number(item.quantity) || 1;
+      targetProduct.quantity = Math.max(0, currentStock - requestedQty);
+      
+      purchasedSummary.push({
+        id: targetProduct.id,
+        name: targetProduct.name || targetProduct.title,
+        price: targetProduct.price,
+        purchasedQuantity: requestedQty,
+        remainingStock: targetProduct.quantity,
+        image: targetProduct.image
+      });
+    }
+  }
+
+  return { success: true, purchasedItems: purchasedSummary };
+}

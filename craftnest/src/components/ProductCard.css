@@ -13,6 +13,10 @@
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
+.out-of-stock-card {
+  opacity: 0.85;
+}
+
 .product-image-wrapper {
   position: relative;
   width: 100%;
@@ -40,6 +44,21 @@
   right: var(--space-sm);
   background-color: var(--saffron);
   color: var(--charcoal);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.out-of-stock-badge {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  background-color: #e53e3e;
+  color: #ffffff;
   padding: 4px 12px;
   border-radius: var(--radius-full);
   font-family: 'DM Sans', sans-serif;
@@ -89,7 +108,7 @@
 
 .product-rating {
   color: var(--saffron);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-xs);
   font-size: 1rem;
 }
 
@@ -98,6 +117,21 @@
   font-size: 0.85rem;
   font-family: 'DM Sans', sans-serif;
   margin-left: var(--space-xs);
+}
+
+.stock-count-text {
+  font-size: 0.8rem;
+  margin-bottom: var(--space-sm);
+}
+
+.text-in-stock {
+  color: #2f855a;
+  font-weight: 600;
+}
+
+.text-out-of-stock {
+  color: #e53e3e;
+  font-weight: 600;
 }
 
 .btn-add-cart {
@@ -115,6 +149,13 @@
   width: 100%;
 }
 
-.btn-add-cart:hover {
+.btn-add-cart:hover:not(:disabled) {
   background-color: var(--terracotta);
+}
+
+.btn-add-cart:disabled,
+.btn-add-cart.disabled {
+  background-color: #cbd5e0;
+  color: #718096;
+  cursor: not-allowed;
 }

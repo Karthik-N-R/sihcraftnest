@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import StepWizard from '../../components/StepWizard';
 import ImageUploader from '../../components/ImageUploader';
@@ -10,12 +10,20 @@ import ListingPreview from '../../components/ListingPreview';
 import MissingFieldCollector from '../../components/MissingFieldCollector';
 import { classifyImage } from '../../lib/classifiers/classifierProvider';
 import { useProducts } from '../../context/ProductContext';
+import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import './sell.css';
 
 export default function SellPage() {
   const router = useRouter();
   const { refreshProducts } = useProducts() || {};
+  const { user, isAuthenticated, isLoading } = useAuth() || {};
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/login?redirect=/sell');
+    }
+  }, [isLoading, isAuthenticated, router]);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -369,6 +377,8 @@ export default function SellPage() {
     try {
       const finalData = {
         ...listingData,
+        artisanId: user?.id || "u_demo_seller",
+        artisanName: user?.name || "Rajesh Kumar (Artisan)",
         image: imagePreview
       };
 
@@ -383,7 +393,7 @@ export default function SellPage() {
         if (refreshProducts) {
           await refreshProducts();
         }
-        router.push('/shop');
+        router.push('/dashboard');
       } else {
         const errorData = await res.json();
         setErrorMessage(errorData?.error || "Failed to publish product. Please try again.");

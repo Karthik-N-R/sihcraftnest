@@ -1,0 +1,148 @@
+.auth-page {
+  min-height: 100vh;
+  padding-bottom: 60px;
+  background-color: var(--warm-cream, #faf7f2);
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px;
+  max-width: 480px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.auth-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--charcoal, #2d3748);
+  margin-bottom: 6px;
+}
+
+.auth-error-banner {
+  background-color: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.auth-form label {
+  display: block;
+  font-weight: 600;
+  color: var(--charcoal, #2d3748);
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  border-radius: 10px;
+  background: var(--coral, #dd6b20);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.auth-submit-btn:hover {
+  background: var(--terracotta, #c05621);
+}
+
+.demo-accounts-box {
+  background: #f7fafc;
+  border: 1px dashed #cbd5e0;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.demo-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--charcoal-light, #718096);
+  margin-bottom: 10px;
+}
+
+.demo-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-demo {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e0;
+  background: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-demo-seller:hover {
+  background: #fffaf5;
+  border-color: #dd6b20;
+  color: #c05621;
+}
+
+.btn-demo-buyer:hover {
+  background: #f0fff4;
+  border-color: #38a169;
+  color: #276749;
+}
+
+.role-selector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.role-card-option {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+.role-card-option:hover {
+  border-color: var(--coral, #dd6b20);
+}
+
+.role-card-option.selected {
+  border-color: var(--terracotta, #c05621);
+  background: #fffaf5;
+}
+
+.role-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--charcoal, #2d3748);
+  display: block;
+}
+
+.role-desc {
+  font-size: 0.75rem;
+  color: var(--charcoal-light, #718096);
+  margin-top: 4px;
+  display: block;
+}
+
+.auth-link {
+  color: var(--terracotta, #c05621);
+  font-weight: 600;
+  text-decoration: underline;
+}

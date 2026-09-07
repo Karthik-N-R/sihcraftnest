@@ -26,16 +26,26 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   const addToCart = (product, quantity = 1) => {
+    if (!product) return;
+    const maxStock = product.quantity !== undefined && product.quantity !== null ? Number(product.quantity) : 10;
+    if (maxStock <= 0) return;
+
+    // Use seller's actual price only
+    const price = Number(product.price) || 0;
+
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
+        const currentStockLimit = item.stockLimit !== undefined ? item.stockLimit : maxStock;
+        const newQty = Math.min(existing.quantity + quantity, currentStockLimit);
         return prev.map(item => 
           item.id === product.id 
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, price, quantity: newQty, stockLimit: currentStockLimit }
             : item
         );
       }
-      return [...prev, { ...product, quantity }];
+      const initialQty = Math.min(quantity, maxStock);
+      return [...prev, { ...product, price, quantity: initialQty, stockLimit: maxStock }];
     });
     setIsOpen(true);
   };
@@ -44,17 +54,26 @@ export function CartProvider({ children }) {
     setCart(prev => prev.filter(item => item.id !== productId));
   };
 
-  const updateQuantity = (productId, quantity) => {
-    if (quantity <= 0) {
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
       removeFromCart(productId);
       return;
     }
-    setCart(prev => prev.map(item => 
-      item.id === productId ? { ...item, quantity } : item
-    ));
+    setCart(prev => prev.map(item => {
+      if (item.id === productId) {
+        const maxStock = item.stockLimit !== undefined ? item.stockLimit : (item.quantity !== undefined ? item.quantity : 99);
+        return { ...item, quantity: Math.min(newQuantity, maxStock) };
+      }
+      return item;
+    }));
   };
 
-  const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  // Total price MUST ALWAYS use actual seller price
+  const cartTotal = cart.reduce((total, item) => total + (Number(item.price || 0) * item.quantity), 0);
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   return (
@@ -63,6 +82,7 @@ export function CartProvider({ children }) {
       addToCart, 
       removeFromCart, 
       updateQuantity, 
+      clearCart,
       cartTotal, 
       cartCount,
       isOpen,
