@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getProducts, updateProductQuantity } from '../../../lib/productStore.js';
+import { getProducts, updateProductQuantity, rateProduct, updateProductDetails } from '../../../lib/productStore.js';
 
 export async function GET() {
   const products = getProducts();
@@ -8,16 +8,39 @@ export async function GET() {
 
 export async function PATCH(req) {
   try {
-    const { id, quantity } = await req.json();
-    if (!id || quantity === undefined) {
-      return NextResponse.json({ success: false, error: 'Missing id or quantity' }, { status: 400 });
+    const { id, quantity, rating, updatedFields } = await req.json();
+    if (!id) {
+      return NextResponse.json({ success: false, error: 'Missing id' }, { status: 400 });
     }
-    const result = updateProductQuantity(id, quantity);
-    if (result.success) {
-      return NextResponse.json(result);
+
+    if (updatedFields) {
+      const result = updateProductDetails(id, updatedFields);
+      if (result.success) {
+        return NextResponse.json(result);
+      }
+      return NextResponse.json(result, { status: 400 });
     }
-    return NextResponse.json(result, { status: 400 });
+
+    if (rating !== undefined) {
+      const result = rateProduct(id, rating);
+      if (result.success) {
+        return NextResponse.json(result);
+      }
+      return NextResponse.json(result, { status: 400 });
+    }
+
+    if (quantity !== undefined) {
+      const result = updateProductQuantity(id, quantity);
+      if (result.success) {
+        return NextResponse.json(result);
+      }
+      return NextResponse.json(result, { status: 400 });
+    }
+
+    return NextResponse.json({ success: false, error: 'Missing field update parameters' }, { status: 400 });
   } catch (err) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }
+
+

@@ -39,12 +39,46 @@ export function ProductProvider({ children }) {
     return false;
   };
 
+  const rateProduct = async (productId, ratingValue) => {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: productId, rating: ratingValue })
+      });
+      if (res.ok) {
+        await refreshProducts();
+        return true;
+      }
+    } catch (error) {
+      console.error("Failed to rate product", error);
+    }
+    return false;
+  };
+
+  const updateProduct = async (productId, updatedFields) => {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: productId, updatedFields })
+      });
+      if (res.ok) {
+        await refreshProducts();
+        return true;
+      }
+    } catch (error) {
+      console.error("Failed to update product details", error);
+    }
+    return false;
+  };
+
   useEffect(() => {
     refreshProducts();
   }, []);
 
   return (
-    <ProductContext.Provider value={{ products, refreshProducts, updateQuantity }}>
+    <ProductContext.Provider value={{ products, refreshProducts, updateQuantity, rateProduct, updateProduct }}>
       {children}
     </ProductContext.Provider>
   );

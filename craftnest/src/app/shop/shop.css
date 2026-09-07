@@ -17,6 +17,49 @@
   height: max-content;
 }
 
+.shop-search-container {
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  color: var(--charcoal-light);
+  pointer-events: none;
+}
+
+.search-input {
+  padding-left: 34px !important;
+  padding-right: 28px !important;
+  font-size: var(--text-sm) !important;
+  height: 38px;
+  width: 100%;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--charcoal-light);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.clear-search-btn:hover {
+  color: var(--terracotta);
+}
+
 .category-list {
   display: flex;
   flex-direction: column;

@@ -125,3 +125,55 @@ export function purchaseProducts(cartItems = []) {
 
   return { success: true, purchasedItems: purchasedSummary };
 }
+
+export function rateProduct(id, ratingValue) {
+  const product = products.find(p => p.id === id);
+  if (!product) {
+    return { success: false, error: 'Product not found' };
+  }
+
+  const numRating = Number(ratingValue);
+  if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+    return { success: false, error: 'Rating must be between 1 and 5' };
+  }
+
+  const currentRating = Number(product.rating) || 5.0;
+  const currentReviews = Number(product.reviews) || 0;
+
+  const newReviews = currentReviews + 1;
+  const rawAverage = ((currentRating * currentReviews) + numRating) / newReviews;
+  const newRating = Math.round(rawAverage * 10) / 10;
+
+  product.rating = newRating;
+  product.reviews = newReviews;
+
+  return { success: true, product };
+}
+
+export function updateProductDetails(id, updatedFields = {}) {
+  const product = products.find(p => p.id === id);
+  if (!product) {
+    return { success: false, error: 'Product not found' };
+  }
+
+  if (updatedFields.title) {
+    product.title = String(updatedFields.title).trim();
+    product.name = product.title;
+  }
+  if (updatedFields.description) {
+    product.description = String(updatedFields.description).trim();
+  }
+  if (Array.isArray(updatedFields.materials)) {
+    product.materials = updatedFields.materials.map(m => String(m).trim()).filter(Boolean);
+  }
+  if (Array.isArray(updatedFields.tags)) {
+    product.tags = updatedFields.tags.map(t => String(t).trim()).filter(Boolean);
+  }
+  if (updatedFields.b2bSpecs && typeof updatedFields.b2bSpecs === 'object') {
+    product.b2bSpecs = { ...(product.b2bSpecs || {}), ...updatedFields.b2bSpecs };
+  }
+
+  return { success: true, product };
+}
+
+

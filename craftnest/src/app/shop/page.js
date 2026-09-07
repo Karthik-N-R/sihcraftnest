@@ -12,6 +12,7 @@ export default function Shop() {
   const { t } = useLanguage() || {};
   const [filter, setFilter] = useState('All');
   const [sortBy, setSortBy] = useState('newest');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (refreshProducts) {
@@ -21,9 +22,28 @@ export default function Shop() {
 
   const categories = ['All', 'Pottery & Ceramics', 'Woven Textiles', 'Handmade Jewelry', 'Woodcraft', 'Block Print Art', 'Leather Goods'];
 
-  const filteredProducts = filter === 'All' 
-    ? (products || []) 
-    : (products || []).filter(p => p.category === filter);
+  const filteredProducts = (products || []).filter(p => {
+    if (!p) return false;
+
+    // Category filter
+    if (filter !== 'All' && p.category !== filter) {
+      return false;
+    }
+
+    // Search filter (title, description, category, tags)
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+const matchTitle = (p.name || '').toLowerCase().includes(q);      const matchDesc = (p.description || '').toLowerCase().includes(q);
+      const matchCat = (p.category || '').toLowerCase().includes(q);
+      const matchTags = Array.isArray(p.tags) && p.tags.some(tag => String(tag).toLowerCase().includes(q));
+
+      if (!matchTitle && !matchDesc && !matchCat && !matchTags) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortBy === 'price-asc') {
@@ -45,7 +65,7 @@ export default function Shop() {
       
       <div className="shop-header">
         <div className="container">
-          <h1 className="mb-sm">{t('browseCrafts')}</h1>
+          <h1 className="mb-sm font-heading text-gradient">{t('browseCrafts')}</h1>
           <p className="text-gray">{t('discoverCrafts')}</p>
         </div>
       </div>
@@ -53,7 +73,34 @@ export default function Shop() {
       <div className="container shop-layout">
         <aside className="shop-sidebar">
           <h3>{t('categories')}</h3>
-          <ul className="category-list mt-md">
+
+          <div className="shop-search-container mt-sm mb-md">
+            <div className="search-input-wrapper">
+              <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input 
+                type="text" 
+                className="input search-input" 
+                placeholder="Search crafts..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button 
+                  type="button" 
+                  className="clear-search-btn" 
+                  onClick={() => setSearchQuery('')}
+                  title="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          <ul className="category-list">
             {categories.map(cat => (
               <li key={cat}>
                 <button 

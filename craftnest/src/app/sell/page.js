@@ -569,7 +569,7 @@ export default function SellPage() {
       <Navbar />
       
       <div className="container mt-xl">
-        <h1 className="text-center mb-sm font-accent text-gradient" style={{ fontSize: '3rem' }}>{t('digitizeCraftTitle')}</h1>
+        <h1 className="text-center mb-sm font-heading text-gradient" style={{ fontSize: '3rem' }}>{t('digitizeCraftTitle')}</h1>
         <p className="text-center text-gray mb-xl">{t('digitizeCraftSub')}</p>
 
         {errorMessage && (

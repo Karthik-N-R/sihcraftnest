@@ -25,6 +25,105 @@ export async function POST(req) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const candidateModels = ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash"];
+
+    // MODE 3: B2B LISTING OPTIMIZATION FOR EXISTING PRODUCTS
+    if (mode === 'optimize') {
+      const prod = body.product || body;
+      if (!prod) {
+        return NextResponse.json({ error: 'No product data provided for optimization' }, { status: 400 });
+      }
+
+      const optimizeSchema = {
+        type: SchemaType.OBJECT,
+        properties: {
+          optimizedTitle: {
+            type: SchemaType.STRING,
+            description: "An upgraded, commercial & B2B-ready title emphasizing craft technique, origin, and wholesale suitability."
+          },
+          optimizedDescription: {
+            type: SchemaType.STRING,
+            description: "A polished, expanded product description suitable for institutional, corporate, and B2B buyers highlighting authentic heritage, artisan quality, and bulk order readiness."
+          },
+          optimizedMaterials: {
+            type: SchemaType.ARRAY,
+            items: { type: SchemaType.STRING },
+            description: "Standardized list of natural, eco-friendly, or authentic craft materials."
+          },
+          b2bKeywords: {
+            type: SchemaType.ARRAY,
+            items: { type: SchemaType.STRING },
+            description: "List of 4-6 B2B, wholesale, and handicraft search keywords (e.g. 'b2b-handicrafts', 'bulk-crafts', 'artisan-wholesale', 'eco-friendly-decor'). DO NOT include 'gem-registered'."
+          },
+          suggestedMoq: {
+            type: SchemaType.NUMBER,
+            description: "Suggested Minimum Order Quantity (MOQ) as an integer (e.g. 10 or 20) for seller approval."
+          },
+          suggestedLeadTime: {
+            type: SchemaType.STRING,
+            description: "Suggested production lead time for bulk orders (e.g. '2-3 weeks for bulk orders of 50+ units') for seller approval."
+          },
+          suggestedPackaging: {
+            type: SchemaType.STRING,
+            description: "Suggested export-grade packaging recommendation (e.g. 'Individual bubble wrap with protective eco-friendly corrugated box') for seller approval."
+          },
+          suggestedWholesaleDiscount: {
+            type: SchemaType.STRING,
+            description: "Suggested wholesale volume tier (e.g. '10% off on orders above 25 units') for seller approval."
+          }
+        },
+        required: ["optimizedTitle", "optimizedDescription", "optimizedMaterials", "b2bKeywords", "suggestedMoq", "suggestedLeadTime", "suggestedPackaging", "suggestedWholesaleDiscount"]
+      };
+
+      const optimizePrompt = `
+You are an expert B2B catalog & wholesale optimization assistant for CraftNest, an Indian artisan platform connecting traditional artisans with institutional & bulk buyers.
+
+Optimize the following artisan product listing for B2B wholesale buyers:
+
+Current Title: "${prod.title || prod.name || ''}"
+Current Category: "${prod.category || ''}"
+Current Description: "${prod.description || ''}"
+Current Price: ₹${prod.price || 0}
+Current Materials: ${Array.isArray(prod.materials) ? prod.materials.join(', ') : (prod.materials || 'Handcrafted materials')}
+Artisan / Origin: "${prod.artisanName || 'Traditional Artisan'}"
+
+CRITICAL RULES:
+1. DO NOT fabricate or claim that the product is "gem-registered" or government certified unless explicitly stated. NEVER include "gem-registered" in keywords or title.
+2. Formulate clear, realistic B2B suggestions (MOQ, Lead Time, Packaging, Wholesale Discount) which will be presented to the seller for approval.
+3. Write dignity-focused, professional, commercial English celebrating Indian heritage craft.
+`;
+
+      let optimizedResultData = null;
+      let lastErr = null;
+
+      for (const modelName of candidateModels) {
+        try {
+          const model = genAI.getGenerativeModel({
+            model: modelName,
+            generationConfig: {
+              responseMimeType: "application/json",
+              responseSchema: optimizeSchema,
+            }
+          });
+
+          const result = await model.generateContent(optimizePrompt);
+          const responseText = result.response.text();
+          optimizedResultData = JSON.parse(responseText);
+          if (optimizedResultData) break;
+        } catch (err) {
+          lastErr = err;
+          console.error(`B2B Optimization Gemini error with model ${modelName}:`, err.message);
+        }
+      }
+
+      if (!optimizedResultData) {
+        return NextResponse.json({ 
+          error: `Failed B2B optimization using Gemini: ${lastErr?.message || 'Model request failed'}` 
+        }, { status: 500 });
+      }
+
+      return NextResponse.json(optimizedResultData);
+    }
+
     // MODE 2: TARGETED GEMINI EXTRACTION FOR A SINGLE MISSING FIELD
     if (mode === 'targeted' || targetField) {
       if (!targetField || !['size', 'quantity', 'price'].includes(targetField)) {

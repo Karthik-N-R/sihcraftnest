@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import ProductCard from '../../components/ProductCard';
 import { useCart } from '../../context/CartContext';
@@ -13,7 +13,7 @@ import './checkout.css';
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, cartTotal, clearCart } = useCart();
-  const { products = [], refreshProducts } = useProducts() || {};
+  const { products = [], refreshProducts, rateProduct } = useProducts() || {};
   const { t } = useLanguage() || {};
 
   const [buyerInfo, setBuyerInfo] = useState({
@@ -26,6 +26,36 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [orderSuccess, setOrderSuccess] = useState(null);
+
+  // LocalStorage-based duplicate prevention for single-session buyers (browser-level)
+  const [ratedProductIds, setRatedProductIds] = useState([]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('craftnest_rated_products');
+        if (stored) setRatedProductIds(JSON.parse(stored));
+      } catch (e) {
+        console.error('Failed to read craftnest_rated_products from localStorage', e);
+      }
+    }
+  }, []);
+
+  const handleRateProduct = async (productId, ratingValue) => {
+    if (ratedProductIds.includes(productId)) return;
+    if (rateProduct) {
+      const success = await rateProduct(productId, ratingValue);
+      if (success) {
+        const updated = [...ratedProductIds, productId];
+        setRatedProductIds(updated);
+        try {
+          localStorage.setItem('craftnest_rated_products', JSON.stringify(updated));
+        } catch (e) {
+          console.error('Failed to save craftnest_rated_products to localStorage', e);
+        }
+      }
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setBuyerInfo(prev => ({ ...prev, [field]: value }));
@@ -114,20 +144,53 @@ export default function CheckoutPage() {
             <div className="order-items-section mt-lg">
               <h3>{t('purchasedItems')}</h3>
               <div className="purchased-items-list">
-                {purchasedItems.map((item, idx) => (
-                  <div key={idx} className="purchased-item-row">
-                    <img src={item.image || '/images/products/pottery-1.jpg'} alt={item.name} className="purchased-item-thumb" />
-                    <div className="purchased-item-info">
-                      <h4>{item.name}</h4>
-                      <p className="purchased-item-meta">
-                        Price: <strong>₹{Math.round(item.price).toLocaleString('en-IN')}</strong> × {item.purchasedQuantity} unit(s)
-                      </p>
+                {purchasedItems.map((item, idx) => {
+                  const isAlreadyRated = ratedProductIds.includes(item.id);
+                  return (
+                    <div key={idx} className="purchased-item-row" style={{ flexWrap: 'wrap' }}>
+                      <img src={item.image || '/images/products/pottery-1.jpg'} alt={item.name} className="purchased-item-thumb" />
+                      <div className="purchased-item-info" style={{ flex: 1 }}>
+                        <h4>{item.name}</h4>
+                        <p className="purchased-item-meta">
+                          Price: <strong>₹{Math.round(item.price).toLocaleString('en-IN')}</strong> × {item.purchasedQuantity} unit(s)
+                        </p>
+
+                        {/* Interactive Star Rating Control */}
+                        <div className="purchased-item-rating mt-xs" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--charcoal-light)' }}>Rate product:</span>
+                          {isAlreadyRated ? (
+                            <span style={{ fontSize: '0.85rem', color: '#16a34a', fontWeight: '600' }}>✓ Rated</span>
+                          ) : (
+                            <div style={{ display: 'inline-flex', gap: '2px' }}>
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                  key={star}
+                                  type="button"
+                                  onClick={() => handleRateProduct(item.id, star)}
+                                  style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '1.25rem',
+                                    padding: '0 2px',
+                                    color: '#f59e0b',
+                                    lineHeight: 1
+                                  }}
+                                  title={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                                >
+                                  ★
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="purchased-item-total">
+                        ₹{Math.round(item.price * item.purchasedQuantity).toLocaleString('en-IN')}
+                      </div>
                     </div>
-                    <div className="purchased-item-total">
-                      ₹{Math.round(item.price * item.purchasedQuantity).toLocaleString('en-IN')}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="purchased-grand-total">
@@ -165,7 +228,7 @@ export default function CheckoutPage() {
       <Navbar />
 
       <div className="container mt-xl">
-        <h1 className="text-center mb-sm font-accent text-gradient" style={{ fontSize: '2.5rem' }}>{t('completeOrder')}</h1>
+        <h1 className="text-center mb-sm font-heading text-gradient" style={{ fontSize: '2.5rem' }}>{t('completeOrder')}</h1>
         <p className="text-center text-gray mb-xl">{t('empoweringArtisans')}</p>
 
         {errorMessage && (

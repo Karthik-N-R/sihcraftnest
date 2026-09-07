@@ -90,7 +90,7 @@ export default function SellerDashboard() {
         <div className="dashboard-header-row mb-xl">
           <div>
             <span className="badge badge-terracotta mb-xs">{t('artisanPortal')}</span>
-            <h1 className="font-accent text-gradient" style={{ fontSize: '2.5rem', margin: 0 }}>
+            <h1 className="font-heading text-gradient" style={{ fontSize: '2.5rem', margin: 0 }}>
               {t('sellerDashboardTitle')}
             </h1>
             <p className="text-gray" style={{ margin: '4px 0 0 0' }}>
