@@ -70,6 +70,16 @@ export function addProduct(productData) {
   return newProduct;
 }
 
+export function updateProductQuantity(id, quantity) {
+  const product = products.find(p => p.id === id);
+  if (!product) {
+    return { success: false, error: 'Product not found' };
+  }
+  const newQty = Math.max(0, Number(quantity) || 0);
+  product.quantity = newQty;
+  return { success: true, product };
+}
+
 export function purchaseProducts(cartItems = []) {
   if (!Array.isArray(cartItems) || cartItems.length === 0) {
     return { success: false, error: 'Cart is empty.' };
@@ -105,6 +115,7 @@ export function purchaseProducts(cartItems = []) {
         id: targetProduct.id,
         name: targetProduct.name || targetProduct.title,
         price: targetProduct.price,
+        category: targetProduct.category || 'Handcrafted',
         purchasedQuantity: requestedQty,
         remainingStock: targetProduct.quantity,
         image: targetProduct.image

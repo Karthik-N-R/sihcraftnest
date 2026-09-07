@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f7f4ef"/>
+  <ellipse cx="200" cy="330" rx="140" ry="25" fill="#e2dad0"/>
+  <!-- Bowl 1 -->
+  <path d="M 80 220 Q 80 300 160 300 Q 240 300 240 220 Z" fill="#c86d51"/>
+  <ellipse cx="160" cy="220" rx="80" ry="22" fill="#5b2c1d"/>
+  <ellipse cx="160" cy="220" rx="72" ry="18" fill="#1b4965"/>
+  <!-- Bowl 2 (offset) -->
+  <path d="M 180 180 Q 180 260 260 260 Q 340 260 340 180 Z" fill="#d97757"/>
+  <ellipse cx="260" cy="180" rx="80" ry="22" fill="#6b3524"/>
+  <ellipse cx="260" cy="180" rx="72" ry="18" fill="#2b5b7b"/>
+  <!-- Decorative Rim Line -->
+  <ellipse cx="260" cy="180" rx="77" ry="20" fill="none" stroke="#e8a584" stroke-width="2"/>
+  <ellipse cx="160" cy="220" rx="77" ry="20" fill="none" stroke="#e8a584" stroke-width="2"/>
+</svg>

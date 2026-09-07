@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f7f3ed"/>
+  <ellipse cx="200" cy="350" rx="100" ry="12" fill="#e0d6c8"/>
+  <!-- Terracotta Mask Contour -->
+  <path d="M 120 120 C 120 60 280 60 280 120 C 280 250 250 330 200 340 C 150 330 120 250 120 120 Z" fill="#bd5d38"/>
+  <!-- Eyebrows & Crown -->
+  <path d="M 140 110 Q 200 80 260 110" fill="none" stroke="#3d1e13" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="200" cy="80" r="10" fill="#e6a15c"/>
+  <!-- Eyes -->
+  <ellipse cx="160" cy="140" rx="20" ry="10" fill="#fcfaf7"/>
+  <ellipse cx="240" cy="140" rx="20" ry="10" fill="#fcfaf7"/>
+  <circle cx="160" cy="140" r="6" fill="#3d1e13"/>
+  <circle cx="240" cy="140" r="6" fill="#3d1e13"/>
+  <!-- Nose & Mouth -->
+  <path d="M 200 130 L 190 220 L 210 220 Z" fill="#8c3e20"/>
+  <path d="M 160 260 Q 200 290 240 260 Q 200 270 160 260 Z" fill="#3d1e13"/>
+  <!-- Folk Paint Marks -->
+  <circle cx="140" cy="200" r="8" fill="#e6a15c"/>
+  <circle cx="260" cy="200" r="8" fill="#e6a15c"/>
+  <path d="M 200 40 L 200 60" stroke="#bd5d38" stroke-width="6"/>
+</svg>

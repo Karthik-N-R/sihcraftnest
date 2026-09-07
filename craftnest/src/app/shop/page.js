@@ -11,6 +11,7 @@ export default function Shop() {
   const { products, refreshProducts } = useProducts();
   const { t } = useLanguage() || {};
   const [filter, setFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('newest');
 
   useEffect(() => {
     if (refreshProducts) {
@@ -21,8 +22,22 @@ export default function Shop() {
   const categories = ['All', 'Pottery & Ceramics', 'Woven Textiles', 'Handmade Jewelry', 'Woodcraft', 'Block Print Art', 'Leather Goods'];
 
   const filteredProducts = filter === 'All' 
-    ? products 
-    : products.filter(p => p.category === filter);
+    ? (products || []) 
+    : (products || []).filter(p => p.category === filter);
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === 'price-asc') {
+      return (Number(a.price) || 0) - (Number(b.price) || 0);
+    }
+    if (sortBy === 'price-desc') {
+      return (Number(b.price) || 0) - (Number(a.price) || 0);
+    }
+    // Default: newest
+    const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    if (timeA !== timeB) return timeB - timeA;
+    return 0;
+  });
 
   return (
     <main>
@@ -54,21 +69,26 @@ export default function Shop() {
 
         <section className="shop-main">
           <div className="shop-controls mb-xl">
-            <p>{t('showingProducts', { count: filteredProducts.length })}</p>
-            <select className="input select" style={{ width: 'auto' }}>
-              <option>{t('sortByNewest')}</option>
-              <option>{t('priceLowToHigh')}</option>
-              <option>{t('priceHighToLow')}</option>
+            <p>{t('showingProducts', { count: sortedProducts.length })}</p>
+            <select 
+              className="input select" 
+              style={{ width: 'auto' }}
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="newest">{t('sortByNewest')}</option>
+              <option value="price-asc">{t('priceLowToHigh')}</option>
+              <option value="price-desc">{t('priceHighToLow')}</option>
             </select>
           </div>
 
           <div className="product-grid-3">
-            {filteredProducts.map(product => (
+            {sortedProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
-          {filteredProducts.length === 0 && (
+          {sortedProducts.length === 0 && (
             <div className="empty-state text-center mt-xl">
               <h3>{t('noProductsFound')}</h3>
               <p>{t('tryDifferentCategory')}</p>

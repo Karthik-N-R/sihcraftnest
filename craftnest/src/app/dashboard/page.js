@@ -12,7 +12,7 @@ import './dashboard.css';
 export default function SellerDashboard() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, isSeller } = useAuth() || {};
-  const { products = [], refreshProducts } = useProducts() || {};
+  const { products = [], refreshProducts, updateQuantity } = useProducts() || {};
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -211,9 +211,56 @@ export default function SellerDashboard() {
                           </strong>
                         </td>
                         <td>
-                          <span style={{ fontWeight: 600, fontSize: '1rem', color: isOut ? '#e53e3e' : '#2d3748' }}>
-                            {qtyVal}
-                          </span>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                            <button
+                              type="button"
+                              style={{
+                                width: '28px',
+                                height: '28px',
+                                borderRadius: '4px',
+                                border: '1px solid #cbd5e0',
+                                background: '#edf2f7',
+                                cursor: qtyVal > 0 ? 'pointer' : 'not-allowed',
+                                fontWeight: 'bold',
+                                fontSize: '1rem',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#2d3748',
+                                lineHeight: 1
+                              }}
+                              onClick={() => updateQuantity && updateQuantity(product.id, Math.max(0, qtyVal - 1))}
+                              disabled={qtyVal <= 0}
+                              aria-label="Decrease stock"
+                            >
+                              -
+                            </button>
+                            <span style={{ fontWeight: 600, fontSize: '1rem', color: isOut ? '#e53e3e' : '#2d3748', minWidth: '24px', textAlign: 'center' }}>
+                              {qtyVal}
+                            </span>
+                            <button
+                              type="button"
+                              style={{
+                                width: '28px',
+                                height: '28px',
+                                borderRadius: '4px',
+                                border: '1px solid #cbd5e0',
+                                background: '#edf2f7',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                fontSize: '1rem',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#2d3748',
+                                lineHeight: 1
+                              }}
+                              onClick={() => updateQuantity && updateQuantity(product.id, qtyVal + 1)}
+                              aria-label="Increase stock"
+                            >
+                              +
+                            </button>
+                          </div>
                         </td>
                         <td>
                           {isOut ? (

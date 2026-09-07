@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f4efea"/>
+  <!-- Hanging Rod -->
+  <rect x="50" y="40" width="300" height="12" rx="6" fill="#5c3417"/>
+  <!-- Hanging Cord -->
+  <path d="M 70 40 L 200 15 L 330 40" fill="none" stroke="#5c3417" stroke-width="3"/>
+  <!-- Tapestry Fabric -->
+  <rect x="70" y="52" width="260" height="300" fill="#1d3557"/>
+  <!-- Dabu Indigo Mud-Resist Block Print Motifs -->
+  <g fill="#f4efea" opacity="0.9">
+    <circle cx="200" cy="150" r="40"/>
+    <circle cx="200" cy="150" r="30" fill="#1d3557"/>
+    <circle cx="200" cy="150" r="15"/>
+    
+    <circle cx="130" cy="240" r="25"/>
+    <circle cx="130" cy="240" r="18" fill="#1d3557"/>
+    
+    <circle cx="270" cy="240" r="25"/>
+    <circle cx="270" cy="240" r="18" fill="#1d3557"/>
+  </g>
+  <!-- Fringe at bottom -->
+  <g stroke="#f4efea" stroke-width="4">
+    <line x1="80" y1="352" x2="80" y2="380"/>
+    <line x1="120" y1="352" x2="120" y2="380"/>
+    <line x1="160" y1="352" x2="160" y2="380"/>
+    <line x1="200" y1="352" x2="200" y2="380"/>
+    <line x1="240" y1="352" x2="240" y2="380"/>
+    <line x1="280" y1="352" x2="280" y2="380"/>
+    <line x1="320" y1="352" x2="320" y2="380"/>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f7f3ed"/>
+  <ellipse cx="200" cy="350" rx="110" ry="16" fill="#e0d6c8"/>
+  <!-- Tote Bag Body -->
+  <path d="M 110 160 L 290 160 L 270 330 L 130 330 Z" fill="#8c4728"/>
+  <!-- Handles -->
+  <path d="M 150 160 C 150 70 250 70 250 160" fill="none" stroke="#5c2b14" stroke-width="12" stroke-linecap="round"/>
+  <!-- Embossed Shantiniketan Batik Motif -->
+  <circle cx="200" cy="245" r="35" fill="#5c2b14"/>
+  <circle cx="200" cy="245" r="25" fill="#e69c24"/>
+  <circle cx="200" cy="245" r="12" fill="#8c4728"/>
+</svg>

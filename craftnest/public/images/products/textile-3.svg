@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#faf6f0"/>
+  <!-- Elegant Folded Silk Stole -->
+  <path d="M 100 60 C 180 100 220 100 300 60 L 320 340 C 220 300 180 300 80 340 Z" fill="#d4af37"/>
+  <!-- Translucent sheer layer -->
+  <path d="M 120 80 C 190 110 210 110 280 80 L 295 320 C 210 290 190 290 105 320 Z" fill="#fff" opacity="0.45"/>
+  <!-- Zari Floral Motif Gold Brocade -->
+  <g stroke="#996515" stroke-width="2" fill="none" opacity="0.8">
+    <circle cx="200" cy="150" r="15"/>
+    <circle cx="200" cy="150" r="8"/>
+    <circle cx="150" cy="220" r="12"/>
+    <circle cx="250" cy="220" r="12"/>
+    <circle cx="200" cy="280" r="15"/>
+  </g>
+  <!-- Zari Border Line -->
+  <path d="M 100 60 L 300 60" stroke="#996515" stroke-width="12"/>
+  <path d="M 80 340 L 320 340" stroke="#996515" stroke-width="12"/>
+</svg>

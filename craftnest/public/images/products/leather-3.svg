@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f7f3ec"/>
+  <ellipse cx="200" cy="340" rx="120" ry="18" fill="#e0d5c5"/>
+  <!-- Mojri Shoe 1 (Left) -->
+  <path d="M 80 180 C 80 120 130 110 180 140 C 200 200 170 290 120 300 C 90 280 80 230 80 180 Z" fill="#944d24"/>
+  <!-- Curled Toe Tip -->
+  <path d="M 80 180 Q 60 160 70 140 Q 85 140 80 180 Z" fill="#b05d2c"/>
+  <!-- Braided Strap Motif -->
+  <path d="M 120 180 Q 150 190 175 160" fill="none" stroke="#d4af37" stroke-width="5"/>
+
+  <!-- Mojri Shoe 2 (Right offset) -->
+  <path d="M 220 180 C 220 120 270 110 320 140 C 340 200 310 290 260 300 C 230 280 220 230 220 180 Z" fill="#944d24"/>
+  <!-- Curled Toe Tip -->
+  <path d="M 220 180 Q 200 160 210 140 Q 225 140 220 180 Z" fill="#b05d2c"/>
+  <!-- Braided Strap Motif -->
+  <path d="M 260 180 Q 290 190 315 160" fill="none" stroke="#d4af37" stroke-width="5"/>
+</svg>

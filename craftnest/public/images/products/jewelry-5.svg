@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f5f0e8"/>
+  <ellipse cx="200" cy="340" rx="120" ry="20" fill="#e0d6c8"/>
+  <!-- Stack of Wooden Bangles -->
+  <g transform="translate(100, 80)">
+    <!-- Bangle 1 -->
+    <ellipse cx="100" cy="80" rx="90" ry="25" fill="#4a2c11"/>
+    <ellipse cx="100" cy="80" rx="72" ry="18" fill="#f5f0e8"/>
+    <!-- Bangle 2 -->
+    <ellipse cx="100" cy="110" rx="90" ry="25" fill="#c99700"/>
+    <ellipse cx="100" cy="110" rx="72" ry="18" fill="#f5f0e8"/>
+    <!-- Bangle 3 -->
+    <ellipse cx="100" cy="140" rx="90" ry="25" fill="#6b3e19"/>
+    <ellipse cx="100" cy="140" rx="72" ry="18" fill="#f5f0e8"/>
+    <!-- Bangle 4 -->
+    <ellipse cx="100" cy="170" rx="90" ry="25" fill="#c99700"/>
+    <ellipse cx="100" cy="170" rx="72" ry="18" fill="#f5f0e8"/>
+    <!-- Bangle 5 -->
+    <ellipse cx="100" cy="200" rx="90" ry="25" fill="#4a2c11"/>
+    <ellipse cx="100" cy="200" rx="72" ry="18" fill="#f5f0e8"/>
+  </g>
+</svg>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Navbar from '../../components/Navbar';
+import ProductCard from '../../components/ProductCard';
 import { useCart } from '../../context/CartContext';
 import { useProducts } from '../../context/ProductContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -12,7 +13,7 @@ import './checkout.css';
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, cartTotal, clearCart } = useCart();
-  const { refreshProducts } = useProducts() || {};
+  const { products = [], refreshProducts } = useProducts() || {};
   const { t } = useLanguage() || {};
 
   const [buyerInfo, setBuyerInfo] = useState({
@@ -71,6 +72,22 @@ export default function CheckoutPage() {
     const purchasedItems = orderSuccess.purchasedItems || [];
     const totalAmount = purchasedItems.reduce((acc, item) => acc + (Number(item.price || 0) * item.purchasedQuantity), 0);
 
+    const purchasedIds = new Set(purchasedItems.map(item => item.id));
+    const purchasedCategories = new Set(
+      purchasedItems.map(item => {
+        if (item.category) return item.category;
+        const found = products.find(p => p.id === item.id);
+        return found?.category;
+      }).filter(Boolean)
+    );
+
+    const recommendedProducts = products.filter(p => {
+      if (!p) return false;
+      if (purchasedIds.has(p.id)) return false;
+      if (Number(p.quantity || 0) <= 0) return false;
+      return purchasedCategories.has(p.category);
+    }).slice(0, 4);
+
     return (
       <main className="checkout-page">
         <Navbar />
@@ -118,6 +135,19 @@ export default function CheckoutPage() {
                 <span className="total-price">₹{Math.round(totalAmount).toLocaleString('en-IN')}</span>
               </div>
             </div>
+
+            {recommendedProducts.length > 0 && (
+              <div className="order-recommendations-section mt-xl text-left" style={{ borderTop: '1px solid #e2e8f0', paddingTop: '24px' }}>
+                <h3 className="mb-md" style={{ color: 'var(--charcoal)', fontSize: '1.25rem' }}>
+                  {t('recommendedForYou')}
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
+                  {recommendedProducts.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="text-center mt-xl">
               <Link href="/shop" className="btn btn-primary" style={{ padding: '12px 32px', fontSize: '1.1rem' }}>

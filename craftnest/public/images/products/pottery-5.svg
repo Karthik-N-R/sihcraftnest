@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f4efe6"/>
+  <ellipse cx="200" cy="350" rx="100" ry="18" fill="#dfd5c5"/>
+  <!-- Pitcher Body -->
+  <path d="M 170 120 C 120 180 110 280 160 340 L 240 340 C 290 280 280 180 230 120 Z" fill="#9e6245"/>
+  <!-- Neck and Spout -->
+  <path d="M 170 120 L 150 70 Q 200 65 250 80 L 230 120 Z" fill="#b87352"/>
+  <ellipse cx="200" cy="72" rx="45" ry="12" fill="#4d2c1d"/>
+  <!-- Handle -->
+  <path d="M 235 110 C 310 130 310 260 245 290" fill="none" stroke="#9e6245" stroke-width="20" stroke-linecap="round"/>
+  <!-- Mineral Glaze -->
+  <path d="M 170 120 Q 200 240 245 290 C 280 220 270 150 230 120 Z" fill="#52796f" opacity="0.75"/>
+</svg>

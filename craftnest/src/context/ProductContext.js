@@ -22,12 +22,29 @@ export function ProductProvider({ children }) {
     return products;
   };
 
+  const updateQuantity = async (productId, newQuantity) => {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: productId, quantity: newQuantity })
+      });
+      if (res.ok) {
+        await refreshProducts();
+        return true;
+      }
+    } catch (error) {
+      console.error("Failed to update product quantity", error);
+    }
+    return false;
+  };
+
   useEffect(() => {
     refreshProducts();
   }, []);
 
   return (
-    <ProductContext.Provider value={{ products, refreshProducts }}>
+    <ProductContext.Provider value={{ products, refreshProducts, updateQuantity }}>
       {children}
     </ProductContext.Provider>
   );

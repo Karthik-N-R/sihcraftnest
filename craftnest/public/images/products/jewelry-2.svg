@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f7f4ee"/>
+  <ellipse cx="200" cy="330" rx="90" ry="14" fill="#dfd7cb"/>
+  <!-- Bust Silhouette -->
+  <path d="M 120 350 C 120 280 150 250 200 250 C 250 250 280 280 280 350 Z" fill="#e8ded1"/>
+  <!-- Brass Choker Arc -->
+  <path d="M 130 220 C 130 290 270 290 270 220 C 270 200 130 200 130 220 Z" fill="#c99700"/>
+  <!-- Meenakari Enamel Panels -->
+  <g fill="#9b2226">
+    <circle cx="160" cy="245" r="8"/>
+    <circle cx="180" cy="252" r="8"/>
+    <circle cx="200" cy="254" r="9"/>
+    <circle cx="220" cy="252" r="8"/>
+    <circle cx="240" cy="245" r="8"/>
+  </g>
+  <g fill="#005f73">
+    <circle cx="160" cy="245" r="4"/>
+    <circle cx="180" cy="252" r="4"/>
+    <circle cx="200" cy="254" r="5"/>
+    <circle cx="220" cy="252" r="4"/>
+    <circle cx="240" cy="245" r="4"/>
+  </g>
+</svg>

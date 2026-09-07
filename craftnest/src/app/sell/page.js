@@ -13,6 +13,7 @@ import { useProducts } from '../../context/ProductContext';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from 'next/navigation';
+import { processPaintingThumbnail } from '../../utils/processPaintingThumbnail';
 import './sell.css';
 
 export default function SellPage() {
@@ -49,6 +50,10 @@ export default function SellPage() {
   // Background AI Image Enhancement state
   const [enhancedImage, setEnhancedImage] = useState(null);
   const [imageEnhancementStatus, setImageEnhancementStatus] = useState('idle'); // 'idle' | 'processing' | 'ready' | 'failed'
+
+  // Background Painting Thumbnail Processing state
+  const [processedThumbnail, setProcessedThumbnail] = useState(null);
+  const [thumbnailProcessingStatus, setThumbnailProcessingStatus] = useState('idle'); // 'idle' | 'processing' | 'ready' | 'failed'
 
   const steps = [
     { title: t('uploadPhoto'), icon: "📷" },
@@ -124,6 +129,40 @@ export default function SellPage() {
     }
   };
 
+  // Trigger background painting thumbnail processing asynchronously
+  const triggerBackgroundThumbnail = async (previewUrl) => {
+    if (!previewUrl || thumbnailProcessingStatus === 'processing' || thumbnailProcessingStatus === 'ready') return;
+    setThumbnailProcessingStatus('processing');
+
+    try {
+      const result = await processPaintingThumbnail(previewUrl);
+      if (result) {
+        setProcessedThumbnail(result);
+        setThumbnailProcessingStatus('ready');
+      } else {
+        console.warn('Background painting thumbnail note: No rectangle detected or processing skipped');
+        setThumbnailProcessingStatus('failed');
+      }
+    } catch (err) {
+      console.warn('Background painting thumbnail processing error:', err);
+      setThumbnailProcessingStatus('failed');
+    }
+  };
+
+  // Helper to determine the final product image preference:
+  // 1. Processed framed thumbnail (if ready)
+  // 2. Enhanced image (if ready)
+  // 3. Original imagePreview
+  const getFinalProductImage = () => {
+    if (thumbnailProcessingStatus === 'ready' && processedThumbnail) {
+      return processedThumbnail;
+    }
+    if (imageEnhancementStatus === 'ready' && enhancedImage) {
+      return enhancedImage;
+    }
+    return imagePreview || '/images/products/pottery-1.jpg';
+  };
+
   // Helper to determine missing mandatory fields in fixed sequence: size -> quantity -> price
   const getMissingMandatoryFields = (listing) => {
     if (!listing) return ['size', 'quantity', 'price'];
@@ -165,6 +204,8 @@ export default function SellPage() {
     setErrorMessage(null);
     setEnhancedImage(null);
     setImageEnhancementStatus('idle');
+    setProcessedThumbnail(null);
+    setThumbnailProcessingStatus('idle');
 
     if (!file) {
       setImageFile(null);
@@ -176,14 +217,19 @@ export default function SellPage() {
     setImageFile(file);
     if (dataUrl) {
       setImagePreview(dataUrl);
+      triggerBackgroundThumbnail(dataUrl);
     } else {
       const reader = new FileReader();
-      reader.onload = (e) => setImagePreview(e.target.result);
+      reader.onload = (e) => {
+        const url = e.target.result;
+        setImagePreview(url);
+        triggerBackgroundThumbnail(url);
+      };
       reader.readAsDataURL(file);
     }
   };
 
-  // Step 1: Trigger Craft Classification & Background Image Enhancement
+  // Step 1: Trigger Craft Classification & Background Image Enhancement / Thumbnail Processing
   const processImageClassification = async () => {
     if (!imageFile) return;
     setIsProcessing(true);
@@ -210,9 +256,13 @@ export default function SellPage() {
     } finally {
       setIsProcessing(false);
       setProcessingMessage('');
-      // Trigger AI image enhancement in the BACKGROUND asynchronously after classification completes
-      if (targetPreview && imageEnhancementStatus === 'idle') {
-        triggerBackgroundEnhancement(targetPreview);
+      if (targetPreview) {
+        if (thumbnailProcessingStatus === 'idle') {
+          triggerBackgroundThumbnail(targetPreview);
+        }
+        if (imageEnhancementStatus === 'idle') {
+          triggerBackgroundEnhancement(targetPreview);
+        }
       }
     }
   };
@@ -455,7 +505,7 @@ export default function SellPage() {
     setErrorMessage(null);
 
     try {
-      const finalImage = (imageEnhancementStatus === 'ready' && enhancedImage) ? enhancedImage : imagePreview;
+      const finalImage = getFinalProductImage();
 
       const finalData = {
         ...listingData,
@@ -654,7 +704,7 @@ export default function SellPage() {
                   <ListingPreview 
                     listingData={listingData} 
                     onChange={(newData) => setListingData(newData)}
-                    imagePreview={(imageEnhancementStatus === 'ready' && enhancedImage) ? enhancedImage : imagePreview}
+                    imagePreview={getFinalProductImage()}
                   />
                 );
               })()}
@@ -678,10 +728,54 @@ export default function SellPage() {
                 <div className="final-preview-card">
                   <div style={{ position: 'relative' }}>
                     <img 
-                      src={(imageEnhancementStatus === 'ready' && enhancedImage) ? enhancedImage : (imagePreview || '/images/products/pottery-1.jpg')} 
+                      src={getFinalProductImage()} 
                       alt="Product preview" 
                     />
-                    {imageEnhancementStatus === 'processing' && (
+                    {thumbnailProcessingStatus === 'ready' && (
+                      <span 
+                        className="badge" 
+                        style={{ 
+                          position: 'absolute', 
+                          top: '10px', 
+                          right: '10px', 
+                          background: '#5b3825', 
+                          color: '#ffffff', 
+                          fontSize: '0.78rem', 
+                          fontWeight: '600',
+                          padding: '5px 10px', 
+                          borderRadius: '20px', 
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        🖼️ Framed Thumbnail
+                      </span>
+                    )}
+                    {thumbnailProcessingStatus === 'processing' && (
+                      <span 
+                        className="badge" 
+                        style={{ 
+                          position: 'absolute', 
+                          top: '10px', 
+                          right: '10px', 
+                          background: 'rgba(255, 255, 255, 0.92)', 
+                          color: '#2d3748', 
+                          fontSize: '0.78rem', 
+                          fontWeight: '600',
+                          padding: '5px 10px', 
+                          borderRadius: '20px', 
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        🎨 Framing thumbnail...
+                      </span>
+                    )}
+                    {thumbnailProcessingStatus !== 'ready' && thumbnailProcessingStatus !== 'processing' && imageEnhancementStatus === 'processing' && (
                       <span 
                         className="badge" 
                         style={{ 
@@ -703,7 +797,7 @@ export default function SellPage() {
                         ✨ AI enhancement processing...
                       </span>
                     )}
-                    {imageEnhancementStatus === 'ready' && (
+                    {thumbnailProcessingStatus !== 'ready' && imageEnhancementStatus === 'ready' && (
                       <span 
                         className="badge" 
                         style={{ 

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f7f3ed"/>
+  <ellipse cx="200" cy="350" rx="120" ry="16" fill="#e0d6c8"/>
+  <!-- Messenger Bag Flap -->
+  <path d="M 80 140 L 320 140 L 300 320 L 100 320 Z" fill="#6b381a"/>
+  <!-- Top Flap Over -->
+  <path d="M 80 140 L 320 140 L 310 240 L 90 240 Z" fill="#522a13"/>
+  <!-- Buckle Straps -->
+  <rect x="130" y="210" width="16" height="70" fill="#361a0b"/>
+  <rect x="254" y="210" width="16" height="70" fill="#361a0b"/>
+  <!-- Brass Buckles -->
+  <rect x="126" y="260" width="24" height="20" rx="3" fill="#c99700"/>
+  <rect x="250" y="260" width="24" height="20" rx="3" fill="#c99700"/>
+  <!-- Shoulder Strap -->
+  <path d="M 80 140 C 40 70 360 70 320 140" fill="none" stroke="#522a13" stroke-width="14"/>
+</svg>
