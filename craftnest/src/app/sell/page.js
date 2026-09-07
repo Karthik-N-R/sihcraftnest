@@ -344,11 +344,15 @@ export default function SellPage() {
       const data = await res.json();
       if (res.ok && !data.error) {
         setListingData(data);
-        if (data.sizeStatus === 'exact') {
-          setSizeConfirmed(true);
-        } else {
-          setSizeConfirmed(false);
-        }
+        if (
+  (data.size && data.size.trim()) ||
+  (data.dimensions && data.dimensions.trim()) ||
+  data.sizeStatus === 'exact'
+) {
+  setSizeConfirmed(true);
+} else {
+  setSizeConfirmed(false);
+}
       } else {
         console.error("Listing generation error", data);
         setErrorMessage(data?.error || "AI listing generation failed. You can edit the details manually.");

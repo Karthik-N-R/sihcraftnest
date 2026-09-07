@@ -50,7 +50,8 @@ export function normalizeProduct(input = {}) {
     location: input.location || null,
     careInstructions: input.careInstructions || null,
     tags,
-    createdAt: input.createdAt || new Date().toISOString()
+    createdAt: input.createdAt || new Date().toISOString(),
+    b2bSpecs: input.b2bSpecs ? { ...input.b2bSpecs } : undefined
   };
 }
 

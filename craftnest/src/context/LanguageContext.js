@@ -183,7 +183,20 @@ const TRANSLATIONS = {
     uploadPhotoSub: "Take a clear photo showing the details and craftsmanship of your creation.",
     describeCraftSub: "Select your preferred language, press the microphone, and speak naturally about materials, techniques, and the story behind your creation.",
     readyToGoLive: "Ready to go live!",
-    reviewBeforePublish: "Review your listing one last time before publishing to the marketplace feed."
+    reviewBeforePublish: "Review your listing one last time before publishing to the marketplace feed.",
+    aiOptimize: "✨ AI Optimize",
+    b2bOpportunities: "B2B & Government Opportunities",
+    b2bOpportunitiesSub: "Explore wholesale markets and official government e-marketplace opportunities for traditional Indian crafts.",
+    exportCsv: "📥 Export B2B Catalogue (CSV)",
+    exportJson: "📄 Export B2B Catalogue (JSON)",
+    aiSuggestedReview: "AI Suggested — Review before applying",
+    b2bReady: "✓ B2B Ready",
+    moqLabel: "Minimum Order Quantity (MOQ)",
+    leadTimeLabel: "Production Lead Time",
+    packagingLabel: "Packaging Recommendation",
+    wholesaleDiscountLabel: "Wholesale Discount Tier",
+    approveAndSaveB2b: "Approve & Save B2B Listing",
+    optimizingListing: "AI is analyzing & formulating B2B suggestions..."
   },
   ta: {
     // Navbar & Common
@@ -363,7 +376,20 @@ const TRANSLATIONS = {
     uploadPhotoSub: "உங்கள் படைப்பின் விவரங்களைக் காட்டும் தெளிவான புகைப்படத்தை எடுக்கவும்.",
     describeCraftSub: "உங்கள் மொழியைத் தேர்ந்தெடுத்து, மைக்கை அழுத்தி, உங்கள் படைப்பின் கதையைப் பேசுங்கள்.",
     readyToGoLive: "வெளியிடத் தயார்!",
-    reviewBeforePublish: "சந்தையில் வெளியிடுவதற்கு முன் உங்கள் பட்டியலை கடைசி முறையாக மதிப்பாய்வு செய்யவும்."
+    reviewBeforePublish: "சந்தையில் வெளியிடுவதற்கு முன் உங்கள் பட்டியலை கடைசி முறையாக மதிப்பாய்வு செய்யவும்.",
+    aiOptimize: "✨ AI மேம்படுத்து",
+    b2bOpportunities: "B2B மற்றும் அரசு வாய்ப்புகள்",
+    b2bOpportunitiesSub: "பாரம்பரிய இந்திய கைவினைப்பொருட்களுக்கான மொத்த விற்பனை சந்தைகள் மற்றும் அரசு இ-சந்தைகளை ஆராயுங்கள்.",
+    exportCsv: "📥 B2B பட்டியலைப் பதிவிறக்கு (CSV)",
+    exportJson: "📄 B2B பட்டியலைப் பதிவிறக்கு (JSON)",
+    aiSuggestedReview: "AI பரிந்துரைத்தது — பயன்படுத்தும் முன் சரிபார்க்கவும்",
+    b2bReady: "✓ B2B தயார்",
+    moqLabel: "குறைந்தபட்ச ஆர்டர் அளவு (MOQ)",
+    leadTimeLabel: "தயாரிப்பு நேரம்",
+    packagingLabel: "பேக்கேஜிங் பரிந்துரை",
+    wholesaleDiscountLabel: "மொத்த விற்பனை தள்ளுபடி",
+    approveAndSaveB2b: "B2B பட்டியலை உறுதிசெய்து சேமிக்கவும்",
+    optimizingListing: "AI பரிந்துரைகளை உருவாக்குகிறது..."
   },
   hi: {
     // Navbar & Common
@@ -543,7 +569,20 @@ const TRANSLATIONS = {
     uploadPhotoSub: "अपनी रचना का विवरण दिखाने वाली एक स्पष्ट फोटो लें।",
     describeCraftSub: "अपनी पसंदीदा भाषा चुनें, माइक दबाएं और अपने शिल्प के बारे में स्वाभाविक रूप से बोलें।",
     readyToGoLive: "लाइव होने के लिए तैयार!",
-    reviewBeforePublish: "मार्केटप्लेस पर प्रकाशित करने से पहले अपनी सूची की अंतिम बार समीक्षा करें।"
+    reviewBeforePublish: "मार्केटप्लेस पर प्रकाशित करने से पहले अपनी सूची की अंतिम बार समीक्षा करें।",
+    aiOptimize: "✨ AI सुधारें",
+    b2bOpportunities: "B2B और सरकारी अवसर",
+    b2bOpportunitiesSub: "पारंपरिक भारतीय हस्तशिल्प के लिए थोक बाजारों और सरकारी ई-मार्केटप्लेस अवसरों की खोज करें।",
+    exportCsv: "📥 B2B कैटलॉग डाउनलोड करें (CSV)",
+    exportJson: "📄 B2B कैटलॉग डाउनलोड करें (JSON)",
+    aiSuggestedReview: "AI द्वारा सुझाया गया — लागू करने से पहले समीक्षा करें",
+    b2bReady: "✓ B2B तैयार",
+    moqLabel: "न्यूनतम ऑर्डर मात्रा (MOQ)",
+    leadTimeLabel: "उत्पादन समय",
+    packagingLabel: "पैकेजिंग सिफारिश",
+    wholesaleDiscountLabel: "थोक छूट",
+    approveAndSaveB2b: "B2B सूची स्वीकृत करें और सहेजें",
+    optimizingListing: "AI सुझाव तैयार कर रहा है..."
   }
 };
 
