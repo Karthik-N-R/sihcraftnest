@@ -1,0 +1,98 @@
+.navbar {
+  background-color: var(--cream);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: var(--space-md) var(--space-xl);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-family: 'Caveat', cursive;
+  font-size: 2.5rem;
+  color: var(--terracotta);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.navbar-logo:hover {
+  color: var(--terracotta-dark);
+}
+
+.navbar-links {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.nav-link {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--charcoal);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--coral);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.btn-sell {
+  background-color: var(--terracotta);
+  color: var(--white);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-sell:hover {
+  background-color: var(--terracotta-dark);
+  transform: translateY(-2px);
+}
+
+.navbar-cart {
+  position: relative;
+  color: var(--charcoal);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbar-cart:hover {
+  color: var(--terracotta);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--saffron);
+  color: var(--charcoal);
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+}
