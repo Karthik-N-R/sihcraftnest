@@ -1,0 +1,609 @@
+"use client";
+
+import { createContext, useContext, useState, useEffect } from 'react';
+
+const LanguageContext = createContext();
+
+const TRANSLATIONS = {
+  en: {
+    // Navbar & Common
+    appName: "CraftNest",
+    shopCrafts: "Shop Crafts",
+    artisanPortal: "Artisan Portal",
+    sellerDashboard: "Seller Dashboard",
+    sellCraft: "+ Sell Craft",
+    logIn: "Log In",
+    signUp: "Sign Up",
+    logout: "Logout",
+    welcome: "Welcome",
+    preferredLanguage: "Preferred Language",
+    
+    // Shop Page
+    browseCrafts: "Browse Crafts",
+    discoverCrafts: "Discover unique items from artisans across the globe.",
+    categories: "Categories",
+    showingProducts: "Showing {count} products",
+    sortByNewest: "Sort by: Newest",
+    priceLowToHigh: "Price: Low to High",
+    priceHighToLow: "Price: High to Low",
+    noProductsFound: "No products found",
+    tryDifferentCategory: "Try selecting a different category.",
+    byArtisan: "by",
+    addToCart: "Add to Cart",
+    outOfStock: "Out of Stock",
+    itemsAvailable: "available",
+    zeroAvailable: "0 items available",
+
+    // Cart Drawer
+    yourCart: "Your Cart",
+    cartEmpty: "Your cart is empty.",
+    continueShopping: "Continue Shopping",
+    cartTotal: "Total:",
+    proceedToCheckout: "Proceed to Checkout",
+    maxStockReached: "Max stock reached",
+
+    // Checkout Page
+    completeOrder: "Complete Your Order",
+    empoweringArtisans: "Directly empowering authentic traditional artisans.",
+    buyerDetails: "Buyer Delivery Details",
+    fullName: "Full Name",
+    phoneNumber: "Phone Number",
+    streetAddress: "Street Address",
+    cityPincode: "City / Pincode",
+    placeOrder: "Place Order",
+    processingOrder: "Processing Order...",
+    orderSummary: "Order Summary",
+    subtotal: "Subtotal",
+    artisanShipping: "Artisan Shipping",
+    free: "FREE",
+    totalAmount: "Total Amount",
+    orderSuccessTitle: "Order Placed Successfully!",
+    orderId: "Order ID",
+    thankYouSupport: "Thank you for supporting traditional Indian artisans on CraftNest!",
+    shippingDetails: "Shipping Details",
+    recipient: "Recipient",
+    purchasedItems: "Purchased Items",
+    totalPaid: "Total Amount Paid:",
+    returnToMarketplace: "Return to Marketplace",
+    cartCurrentlyEmpty: "Your cart is currently empty",
+    browseMarketplace: "Browse Marketplace",
+
+    // Auth (Login & Signup)
+    logInTitle: "Log In to CraftNest",
+    logInSub: "Access your artisan portal or buyer account.",
+    emailAddress: "Email Address",
+    password: "Password",
+    quickDemoLogin: "Quick Demo One-Click Login:",
+    loginDemoSeller: "🎨 Login as Demo Seller",
+    loginDemoBuyer: "🛍️ Login as Demo Buyer",
+    noAccount: "Don't have an account?",
+    signUpHere: "Sign up here",
+    joinCraftNest: "Join CraftNest",
+    createAccountSub: "Create an account as an Artisan Seller or Buyer.",
+    selectRole: "Select Account Role",
+    artisanSellerRole: "🎨 Artisan Seller",
+    sellerDesc: "Digitize & sell handcrafted art",
+    craftBuyerRole: "🛍️ Craft Buyer",
+    buyerDesc: "Discover & buy unique crafts",
+    signUpAsSeller: "Sign Up as Seller",
+    signUpAsBuyer: "Sign Up as Buyer",
+    alreadyHaveAccount: "Already have an account?",
+    logInHere: "Log in here",
+
+    // Seller Dashboard
+    sellerDashboardTitle: "Seller Dashboard",
+    dashboardSub: "Manage your craft listings, inventory stock, and catalog.",
+    addNewProduct: "✨ + Add New Product",
+    artisanAccount: "Artisan Account",
+    totalListings: "Total Listings",
+    activeCraftProducts: "Active Craft Products",
+    itemsInStock: "Total Items in Stock",
+    availableInventory: "Available Inventory",
+    productsRestock: "Products Requiring Restock",
+    myPublishedProducts: "My Published Products",
+    sellingPriceReflects: "Selling prices shown below reflect your actual seller set price (₹).",
+    noProductsPublishedYet: "No products published yet",
+    digitizeFirstCraft: "Use our AI voice workflow to digitize your first craft and publish it to CraftNest.",
+    product: "Product",
+    category: "Category",
+    sellerPriceTable: "Seller Price (₹)",
+    stockQuantity: "Stock Quantity",
+    inventoryStatus: "Inventory Status",
+    actions: "Actions",
+    inStockStatus: "● In Stock",
+    outOfStockStatus: "● Out of Stock",
+    viewInShop: "View in Shop ↗",
+    sellerAccessOnly: "Artisan Seller Access Only",
+    buyerNotice: "You are currently logged in as a Buyer ({name}). The seller dashboard is reserved for registered artisan sellers.",
+    switchToSeller: "Switch to Seller Account",
+
+    // Seller Workflow Steps
+    uploadPhoto: "Upload Photo",
+    detectCraft: "Detect Craft",
+    recordVoice: "Record Voice",
+    transcribe: "Transcribe",
+    generateListing: "Generate Listing",
+    reviewPublish: "Review & Publish",
+    backBtn: "Back",
+    nextBtn: "Next",
+    publish: "Publish",
+    digitizeCraftTitle: "Digitize Your Craft",
+    digitizeCraftSub: "Let AI transform your voice & photo into a global marketplace catalog.",
+
+    // Intermediate Seller Flow UI
+    aiClassification: "AI Craft Classification",
+    confidence: "{percent}% confidence",
+    detectedCraft: "Detected Craft",
+    override: "✎ Override",
+    detectedAttributes: "Detected Attributes",
+    analyzingImage: "Analyzing craft image...",
+    analyzingSubtext: "Detecting artisan craft patterns, style, and region using trained EfficientNet AI...",
+    generatedCatalog: "Generated Catalog",
+    aiGeneratedBadge: "✨ Gemini AI Generated",
+    doneEditing: "Done Editing",
+    editListing: "✎ Edit Listing",
+    productPhoto: "Product Photo",
+    uploadedArtisanPhoto: "Uploaded artisan photo attached to this listing",
+    productTitle: "Product Title",
+    notProvided: "Not provided",
+    sellingPriceLabel: "Selling Price (₹ INR)",
+    notSpecified: "Not specified",
+    aiSuggestedPrice: "AI Suggested Price (₹)",
+    notGenerated: "Not generated",
+    availableQuantityLabel: "Available Quantity",
+    units: "units",
+    sizeDimensionsLabel: "Size / Dimensions",
+    aiEstimated: "AI Estimated",
+    productDescription: "Product Description",
+    materialsLabel: "Materials",
+    colourLabel: "Colour",
+    careInstructionsLabel: "Care Instructions",
+    marketplaceTags: "Marketplace Tags",
+    noTagsGenerated: "No tags generated",
+    confirmSizeMeasurement: "Confirm Size Measurement",
+    sizeEstimatedFromDescription: "The size was estimated from your description as:",
+    enterExactSize: "Enter exact size/dimensions:",
+    saveExactSize: "Save Exact Size",
+    cancelBtn: "Cancel",
+    confirmSizeBtn: "✓ Confirm Size",
+    correctSizeBtn: "✏️ Correct Size",
+    missingInformation: "Missing Information",
+    fieldCounter: "Field {index} of {total}",
+    playingAudio: "🔊 Playing...",
+    playPrompt: "🔊 Play Prompt",
+    processingVoiceResponse: "Processing your voice response...",
+    provideMissingField: "Record a short voice answer to provide the missing {field}.",
+    recordingStatus: "Recording... Speak naturally",
+    recordingCaptured: "✓ Recording captured!",
+    clickMicPrompt: "Click the mic to describe your craft",
+    reRecordVoice: "🎙️ Re-record Voice",
+    dragDropCraftImage: "Drag & drop your craft image here",
+    orClickToBrowse: "or click to browse files",
+    uploadPhotoSub: "Take a clear photo showing the details and craftsmanship of your creation.",
+    describeCraftSub: "Select your preferred language, press the microphone, and speak naturally about materials, techniques, and the story behind your creation.",
+    readyToGoLive: "Ready to go live!",
+    reviewBeforePublish: "Review your listing one last time before publishing to the marketplace feed."
+  },
+  ta: {
+    // Navbar & Common
+    appName: "CraftNest",
+    shopCrafts: "கைவினைப்பொருட்கள் வாங்க",
+    artisanPortal: "கைவினைஞர் தளம்",
+    sellerDashboard: "விற்பனையாளர் பலகை",
+    sellCraft: "+ விற்கவும்",
+    logIn: "உள்நுழைக",
+    signUp: "பதிவு செய்க",
+    logout: "வெளியேறு",
+    welcome: "வரவேற்கிறோம்",
+    preferredLanguage: "விருப்பமான மொழி",
+
+    // Shop Page
+    browseCrafts: "கைவினைப் பொருட்களைப் பார்வையிடவும்",
+    discoverCrafts: "உலகெங்கிலும் உள்ள கைவினைஞர்களின் தனித்துவமான பொருட்களைக் கண்டறியவும்.",
+    categories: "வகைகள்",
+    showingProducts: "{count} பொருட்கள் காட்டப்படுகின்றன",
+    sortByNewest: "வரிசைப்படுத்து: புதியவை",
+    priceLowToHigh: "விலை: குறைந்ததிலிருந்து அதிகம்",
+    priceHighToLow: "விலை: அதிகத்திலிருந்து குறைவு",
+    noProductsFound: "பொருட்கள் எதுவும் கிடைக்கவில்லை",
+    tryDifferentCategory: "வேறு வகையைத் தேர்ந்தெடுக்கவும்.",
+    byArtisan: "உருவாக்கியவர்",
+    addToCart: "கூடையில் சேர்க்கவும்",
+    outOfStock: "கையிருப்பு இல்லை",
+    itemsAvailable: "கிடைக்கின்றன",
+    zeroAvailable: "0 பொருட்கள் உள்ளன",
+
+    // Cart Drawer
+    yourCart: "உங்கள் கூடை",
+    cartEmpty: "உங்கள் கூடை காலியாக உள்ளது.",
+    continueShopping: "தொடர்ந்து வாங்கவும்",
+    cartTotal: "மொத்தம்:",
+    proceedToCheckout: "செக் அவுட்டிற்கு செல்லவும்",
+    maxStockReached: "அதிகபட்ச இருப்பு எட்டப்பட்டது",
+
+    // Checkout Page
+    completeOrder: "ஆர்டரை முடிக்கவும்",
+    empoweringArtisans: "பாரம்பரிய இந்திய கைவினைஞர்களுக்கு நேரடியாக ஆதரவளிக்கவும்.",
+    buyerDetails: "வாங்குபவர் விநியோக விவரங்கள்",
+    fullName: "முழு பெயர்",
+    phoneNumber: "தொலைபேசி எண்",
+    streetAddress: "முகவரி",
+    cityPincode: "நகரம் / அஞ்சல் குறியீடு",
+    placeOrder: "ஆர்டர் செய்யவும்",
+    processingOrder: "ஆர்டர் செயல்படுத்துகிறது...",
+    orderSummary: "ஆர்டர் சுருக்கம்",
+    subtotal: "துணை மொத்தம்",
+    artisanShipping: "டெலிவரி கட்டணம்",
+    free: "இலவசம்",
+    totalAmount: "மொத்த தொகை",
+    orderSuccessTitle: "ஆர்டர் வெற்றிகரமாக செய்யப்பட்டது!",
+    orderId: "ஆர்டர் எண்",
+    thankYouSupport: "CraftNest இல் பாரம்பரிய இந்திய கைவினைஞர்களை ஆதரித்தமைக்கு நன்றி!",
+    shippingDetails: "டெலிவரி விவரங்கள்",
+    recipient: "பெறுநர்",
+    purchasedItems: "வாங்கிய பொருட்கள்",
+    totalPaid: "செலுத்தப்பட்ட மொத்த தொகை:",
+    returnToMarketplace: "சந்தைக்குத் திரும்புக",
+    cartCurrentlyEmpty: "உங்கள் கூடை தற்போது காலியாக உள்ளது",
+    browseMarketplace: "சந்தையைப் பார்வையிடவும்",
+
+    // Auth (Login & Signup)
+    logInTitle: "CraftNest இல் உள்நுழைக",
+    logInSub: "உங்கள் கைவினைஞர் தளம் அல்லது வாங்குபவர் கணக்கை அணுகவும்.",
+    emailAddress: "மின்னஞ்சல் முகவரி",
+    password: "கடவுச்சொல்",
+    quickDemoLogin: "டெமோ கணக்குகள் (ஒரே கிளிக்கில்):",
+    loginDemoSeller: "🎨 விற்பனையாளராக உள்நுழைக",
+    loginDemoBuyer: "🛍️ வாங்குபவராக உள்நுழைக",
+    noAccount: "கணக்கு இல்லையா?",
+    signUpHere: "இங்கே பதிவு செய்யுங்கள்",
+    joinCraftNest: "CraftNest இல் இணையுங்கள்",
+    createAccountSub: "கைவினைஞர் விற்பனையாளர் அல்லது வாங்குபவராக கணக்கை உருவாக்குங்கள்.",
+    selectRole: "கணக்கு வகையைத் தேர்ந்தெடுக்கவும்",
+    artisanSellerRole: "🎨 கைவினைஞர் விற்பனையாளர்",
+    sellerDesc: "கைவினைப் பொருட்களை டிஜிட்டல் செய்து விற்கவும்",
+    craftBuyerRole: "🛍️ கைவினை வாங்குபவர்",
+    buyerDesc: "தனித்துவமான கலைப்பொருட்களைக் கண்டறிந்து வாங்கவும்",
+    signUpAsSeller: "விற்பனையாளராகப் பதிவு செய்க",
+    signUpAsBuyer: "வாங்குபவராகப் பதிவு செய்க",
+    alreadyHaveAccount: "ஏற்கனவே கணக்கு உள்ளதா?",
+    logInHere: "இங்கே உள்நுழைக",
+
+    // Seller Dashboard
+    sellerDashboardTitle: "விற்பனையாளர் கட்டுப்பாட்டுப் பலகை",
+    dashboardSub: "உங்கள் கைவினைப் பட்டியல் மற்றும் இருப்பை நிர்வகிக்கவும்.",
+    addNewProduct: "✨ + புதிய பொருளைச் சேர்க்கவும்",
+    artisanAccount: "கைவினைஞர் கணக்கு",
+    totalListings: "மொத்த பொருட்கள்",
+    activeCraftProducts: "செயலில் உள்ள பொருட்கள்",
+    itemsInStock: "மொத்த இருப்பில் உள்ளவை",
+    availableInventory: "கிடைக்கும் இருப்பு",
+    productsRestock: "மீண்டும் நிரப்ப வேண்டிய பொருட்கள்",
+    myPublishedProducts: "எனது வெளியிடப்பட்ட பொருட்கள்",
+    sellingPriceReflects: "கீழே உள்ள விற்பனை விலை நீங்கள் நிர்ணயித்த உண்மையான விலையாகும் (₹).",
+    noProductsPublishedYet: "இன்னும் பொருட்கள் எதுவும் வெளியிடப்படவில்லை",
+    digitizeFirstCraft: "உங்கள் முதல் கைவினைப் பொருளை வெளியிட எங்கள் AI குரல் அமைப்பைப் பயன்படுத்தவும்.",
+    product: "பொருள்",
+    category: "வகை",
+    sellerPriceTable: "விற்பனை விலை (₹)",
+    stockQuantity: "இருப்பு எண்ணிக்கை",
+    inventoryStatus: "இருப்பு நிலை",
+    actions: "செயல்கள்",
+    inStockStatus: "● கையிருப்பில் உள்ளது",
+    outOfStockStatus: "● கையிருப்பு இல்லை",
+    viewInShop: "கடையில் பார்க்க ↗",
+    sellerAccessOnly: "கைவினைஞர் விற்பனையாளருக்கு மட்டுமே அனுமதி",
+    buyerNotice: "நீங்கள் தற்போது வாங்குபவராக உள்நுழைந்துள்ளீர்கள் ({name}).",
+    switchToSeller: "விற்பனையாளர் கணக்கிற்கு மாறவும்",
+
+    // Seller Workflow Steps
+    uploadPhoto: "புகைப்படம் பதிவேற்றுக",
+    detectCraft: "கலையைக் கண்டறிக",
+    recordVoice: "குரல் பதிவு செய்க",
+    transcribe: "மொழிபெயர்ப்பு",
+    generateListing: "பட்டியலை உருவாக்கு",
+    reviewPublish: "மதிப்பாய்வு செய்து வெளியிடு",
+    backBtn: "பின்னே",
+    nextBtn: "அடுத்து",
+    publish: "வெளியிடு",
+    digitizeCraftTitle: "உங்கள் கைவினைப் பொருளை டிஜிட்டல் ஆக்குங்கள்",
+    digitizeCraftSub: "உங்கள் குரலையும் புகைப்படத்தையும் சந்தைப் பட்டியலாக மாற்ற AI ஐப் பயன்படுத்தவும்.",
+
+    // Intermediate Seller Flow UI
+    aiClassification: "AI கைவினை வகைப்பாடு",
+    confidence: "{percent}% நம்பகத்தன்மை",
+    detectedCraft: "கண்டறியப்பட்ட கைவினை",
+    override: "✎ மாற்றவும்",
+    detectedAttributes: "கண்டறியப்பட்ட பண்புகள்",
+    analyzingImage: "கைவினைப் படம் பகுப்பாய்வு செய்யப்படுகிறது...",
+    analyzingSubtext: "AI மூலம் கைவினை வடிவங்கள் மற்றும் பாணியைக் கண்டறிகிறது...",
+    generatedCatalog: "உருவாக்கப்பட்ட பட்டியல்",
+    aiGeneratedBadge: "✨ Gemini AI உருவாக்கியது",
+    doneEditing: "திருத்தம் முடிந்தது",
+    editListing: "✎ பட்டியலைத் திருத்து",
+    productPhoto: "பொருள் புகைப்படம்",
+    uploadedArtisanPhoto: "இந்தப் பட்டியலுடன் இணைக்கப்பட்ட கைவினைஞர் புகைப்படம்",
+    productTitle: "பொருளின் தலைப்பு",
+    notProvided: "வழங்கப்படவில்லை",
+    sellingPriceLabel: "விற்பனை விலை (₹ INR)",
+    notSpecified: "குறிப்பிடப்படவில்லை",
+    aiSuggestedPrice: "AI பரிந்துரைத்த விலை (₹)",
+    notGenerated: "உருவாக்கப்படவில்லை",
+    availableQuantityLabel: "கிடைக்கும் எண்ணிக்கை",
+    units: "பொருட்கள்",
+    sizeDimensionsLabel: "அளவு / பரிமாணங்கள்",
+    aiEstimated: "AI கணிக்கப்பட்டது",
+    productDescription: "பொருள் விவரம்",
+    materialsLabel: "பொருட்கள்",
+    colourLabel: "நிறம்",
+    careInstructionsLabel: "பராமரிப்பு அறிவுறுத்தல்கள்",
+    marketplaceTags: "சந்தை குறிச்சொற்கள்",
+    noTagsGenerated: "குறிச்சொற்கள் எதுவும் உருவாக்கப்படவில்லை",
+    confirmSizeMeasurement: "அளவை உறுதிப்படுத்தவும்",
+    sizeEstimatedFromDescription: "உங்கள் விளக்கத்திலிருந்து அளவு இவ்வாறு கணிக்கப்பட்டுள்ளது:",
+    enterExactSize: "துல்லியமான அளவை உள்ளிடவும்:",
+    saveExactSize: "துல்லியமான அளவை சேமிக்கவும்",
+    cancelBtn: "ரத்து செய்",
+    confirmSizeBtn: "✓ அளவை உறுதி செய்",
+    correctSizeBtn: "✏️ அளவை திருத்து",
+    missingInformation: "விடுபட்ட தகவல்",
+    fieldCounter: "புலம் {index} / {total}",
+    playingAudio: "🔊 ஒலிக்கிறது...",
+    playPrompt: "🔊 ஒலியை இயக்கு",
+    processingVoiceResponse: "உங்கள் குரல் பதில் செயலாக்கப்படுகிறது...",
+    provideMissingField: "விடுபட்ட {field} விவரத்தை வழங்க குரல் மூலம் பதிலளிக்கவும்.",
+    recordingStatus: "பதிவு செய்யப்படுகிறது... இயல்பாகப் பேசுங்கள்",
+    recordingCaptured: "✓ குரல் பதிவு செய்யப்பட்டது!",
+    clickMicPrompt: "உங்கள் கைவினைப் பற்றி கூற மைக்கை அழுத்துங்கள்",
+    reRecordVoice: "🎙️ மீண்டும் பதிவு செய்",
+    dragDropCraftImage: "உங்கள் கைவினைப் படத்தை இங்கே இழுத்து போடவும்",
+    orClickToBrowse: "அல்லது கோப்புகளைத் தேர்ந்தெடுக்க கிளிக் செய்யவும்",
+    uploadPhotoSub: "உங்கள் படைப்பின் விவரங்களைக் காட்டும் தெளிவான புகைப்படத்தை எடுக்கவும்.",
+    describeCraftSub: "உங்கள் மொழியைத் தேர்ந்தெடுத்து, மைக்கை அழுத்தி, உங்கள் படைப்பின் கதையைப் பேசுங்கள்.",
+    readyToGoLive: "வெளியிடத் தயார்!",
+    reviewBeforePublish: "சந்தையில் வெளியிடுவதற்கு முன் உங்கள் பட்டியலை கடைசி முறையாக மதிப்பாய்வு செய்யவும்."
+  },
+  hi: {
+    // Navbar & Common
+    appName: "CraftNest",
+    shopCrafts: "शिल्प खरीदें",
+    artisanPortal: "कारीगर पोर्टल",
+    sellerDashboard: "विक्रेता डैशबोर्ड",
+    sellCraft: "+ बेचें",
+    logIn: "लॉग इन करें",
+    signUp: "साइन अप करें",
+    logout: "लॉग आउट",
+    welcome: "स्वागत है",
+    preferredLanguage: "पसंदीदा भाषा",
+
+    // Shop Page
+    browseCrafts: "हस्तशिल्प देखें",
+    discoverCrafts: "दुनिया भर के कारीगरों की अनोखी कृतियों की खोज करें।",
+    categories: "श्रेणियाँ",
+    showingProducts: "{count} उत्पाद दिखाए जा रहे हैं",
+    sortByNewest: "क्रमबद्ध करें: नवीनतम",
+    priceLowToHigh: "मूल्य: कम से अधिक",
+    priceHighToLow: "मूल्य: अधिक से कम",
+    noProductsFound: "कोई उत्पाद नहीं मिला",
+    tryDifferentCategory: "कृपया कोई दूसरी श्रेणी चुनें।",
+    byArtisan: "द्वारा",
+    addToCart: "कार्ट में जोड़ें",
+    outOfStock: "स्टॉक में नहीं है",
+    itemsAvailable: "उपलब्ध हैं",
+    zeroAvailable: "0 उत्पाद उपलब्ध",
+
+    // Cart Drawer
+    yourCart: "आपकी कार्ट",
+    cartEmpty: "आपकी कार्ट खाली है।",
+    continueShopping: "खरीदारी जारी रखें",
+    cartTotal: "कुल:",
+    proceedToCheckout: "चेकआउट के लिए आगे बढ़ें",
+    maxStockReached: "अधिकतम स्टॉक सीमा समाप्त",
+
+    // Checkout Page
+    completeOrder: "अपना ऑर्डर पूरा करें",
+    empoweringArtisans: "पारंपरिक भारतीय कारीगरों को सीधे सशक्त बनाएं।",
+    buyerDetails: "खरीदार का पता और विवरण",
+    fullName: "पूरा नाम",
+    phoneNumber: "फ़ोन नंबर",
+    streetAddress: "पता",
+    cityPincode: "शहर / पिनकोड",
+    placeOrder: "ऑर्डर दें",
+    processingOrder: "ऑर्डर संसाधित हो रहा है...",
+    orderSummary: "ऑर्डर विवरण",
+    subtotal: "उप-योग",
+    artisanShipping: "डिलीवरी शुल्क",
+    free: "मुफ़्त",
+    totalAmount: "कुल राशि",
+    orderSuccessTitle: "ऑर्डर सफलतापूर्वक दिया गया!",
+    orderId: "ऑर्डर आईडी",
+    thankYouSupport: "CraftNest पर पारंपरिक भारतीय कारीगरों का समर्थन करने के लिए धन्यवाद!",
+    shippingDetails: "डिलीवरी विवरण",
+    recipient: "प्राप्तकर्ता",
+    purchasedItems: "खरीदे गए उत्पाद",
+    totalPaid: "कुल भुगतान की गई राशि:",
+    returnToMarketplace: "मार्केटप्लेस पर लौटें",
+    cartCurrentlyEmpty: "आपकी कार्ट वर्तमान में खाली है",
+    browseMarketplace: "मार्केटप्लेस देखें",
+
+    // Auth (Login & Signup)
+    logInTitle: "CraftNest में लॉग इन करें",
+    logInSub: "अपने कारीगर पोर्टल या खरीदार खाते तक पहुंचें।",
+    emailAddress: "ईमेल पता",
+    password: "पासवर्ड",
+    quickDemoLogin: "डेमो एक-क्लिक लॉगिन:",
+    loginDemoSeller: "🎨 विक्रेता के रूप में लॉगिन करें",
+    loginDemoBuyer: "🛍️ खरीदार के रूप में लॉगिन करें",
+    noAccount: "खाता नहीं है?",
+    signUpHere: "यहाँ साइन अप करें",
+    joinCraftNest: "CraftNest से जुड़ें",
+    createAccountSub: "कारीगर विक्रेता या खरीदार के रूप में खाता बनाएं।",
+    selectRole: "खाता भूमिका चुनें",
+    artisanSellerRole: "🎨 कारीगर विक्रेता",
+    sellerDesc: "हस्तशिल्प को डिजिटल बनाएं और बेचें",
+    craftBuyerRole: "🛍️ शिल्प खरीदार",
+    buyerDesc: "अनोखे शिल्प खोजें और खरीदें",
+    signUpAsSeller: "विक्रेता के रूप में साइन अप करें",
+    signUpAsBuyer: "खरीदार के रूप में साइन अप करें",
+    alreadyHaveAccount: "क्या आपके पास पहले से एक खाता मौजूद है?",
+    logInHere: "यहाँ लॉगिन करें",
+
+    // Seller Dashboard
+    sellerDashboardTitle: "विक्रेता डैशबोर्ड",
+    dashboardSub: "अपनी शिल्प सूचियों और स्टॉक का प्रबंधन करें।",
+    addNewProduct: "✨ + नया उत्पाद जोड़ें",
+    artisanAccount: "कारीगर खाता",
+    totalListings: "कुल सूचियां",
+    activeCraftProducts: "सक्रिय उत्पाद",
+    itemsInStock: "स्टॉक में कुल वस्तुएं",
+    availableInventory: "उपलब्ध स्टॉक",
+    productsRestock: "स्टॉक समाप्त उत्पाद",
+    myPublishedProducts: "मेरे प्रकाशित उत्पाद",
+    sellingPriceReflects: "नीचे दी गई बिक्री कीमत आपकी निर्धारित वास्तविक कीमत है (₹)।",
+    noProductsPublishedYet: "अभी तक कोई उत्पाद प्रकाशित नहीं हुआ है",
+    digitizeFirstCraft: "अपने पहले शिल्प को प्रकाशित करने के लिए हमारे AI वॉयस सिस्टम का उपयोग करें।",
+    product: "उत्पाद",
+    category: "श्रेणी",
+    sellerPriceTable: "बिक्री मूल्य (₹)",
+    stockQuantity: "स्टॉक मात्रा",
+    inventoryStatus: "स्टॉक स्थिति",
+    actions: "कार्रवाई",
+    inStockStatus: "● स्टॉक में है",
+    outOfStockStatus: "● स्टॉक समाप्त",
+    viewInShop: "दुकान में देखें ↗",
+    sellerAccessOnly: "केवल कारीगर विक्रेता के लिए अनुमत",
+    buyerNotice: "आप वर्तमान में एक खरीदार ({name}) के रूप में लॉग इन हैं।",
+    switchToSeller: "विक्रेता खाते पर स्विच करें",
+
+    // Seller Workflow Steps
+    uploadPhoto: "फोटो अपलोड करें",
+    detectCraft: "कला पहचानें",
+    recordVoice: "आवाज रिकॉर्ड करें",
+    transcribe: "अनुवाद",
+    generateListing: "सूची तैयार करें",
+    reviewPublish: "समीक्षा और प्रकाशित करें",
+    backBtn: "पीछे",
+    nextBtn: "आगे",
+    publish: "प्रकाशित करें",
+    digitizeCraftTitle: "अपने शिल्प को डिजिटल बनाएं",
+    digitizeCraftSub: "अपनी आवाज़ और फोटो को बाज़ार की सूची में बदलने के लिए AI का उपयोग करें।",
+
+    // Intermediate Seller Flow UI
+    aiClassification: "AI शिल्प वर्गीकरण",
+    confidence: "{percent}% सटीकता",
+    detectedCraft: "पहचाना गया शिल्प",
+    override: "✎ बदलें",
+    detectedAttributes: "पहचाने गए गुण",
+    analyzingImage: "शिल्प छवि का विश्लेषण किया जा रहा है...",
+    analyzingSubtext: "AI द्वारा शिल्प पैटर्न और शैली की पहचान की जा रही है...",
+    generatedCatalog: "जनरेट की गई सूची",
+    aiGeneratedBadge: "✨ Gemini AI द्वारा जनरेटेड",
+    doneEditing: "संपादन पूरा हुआ",
+    editListing: "✎ सूची संपादित करें",
+    productPhoto: "उत्पाद फोटो",
+    uploadedArtisanPhoto: "इस सूची के साथ संलग्न कारीगर फोटो",
+    productTitle: "उत्पाद का शीर्षक",
+    notProvided: "उपलब्ध नहीं",
+    sellingPriceLabel: "बिक्री मूल्य (₹ INR)",
+    notSpecified: "निर्दिष्ट नहीं",
+    aiSuggestedPrice: "AI सुझाई गई कीमत (₹)",
+    notGenerated: "जनरेट नहीं हुआ",
+    availableQuantityLabel: "उपलब्ध मात्रा",
+    units: "इकाइयां",
+    sizeDimensionsLabel: "आकार / आयाम",
+    aiEstimated: "AI अनुमानित",
+    productDescription: "उत्पाद का विवरण",
+    materialsLabel: "सामग्री",
+    colourLabel: "रंग",
+    careInstructionsLabel: "देखभाल के निर्देश",
+    marketplaceTags: "मार्केटप्लेस टैग",
+    noTagsGenerated: "कोई टैग जनरेट नहीं हुआ",
+    confirmSizeMeasurement: "आकार के माप की पुष्टि करें",
+    sizeEstimatedFromDescription: "आपके विवरण से आकार का अनुमान इस प्रकार लगाया गया:",
+    enterExactSize: "सटीक आकार/आयाम दर्ज करें:",
+    saveExactSize: "सटीक आकार सहेजें",
+    cancelBtn: "रद्द करें",
+    confirmSizeBtn: "✓ आकार की पुष्टि करें",
+    correctSizeBtn: "✏️ आकार सही करें",
+    missingInformation: "अधूरी जानकारी",
+    fieldCounter: "फ़ील्ड {index} / {total}",
+    playingAudio: "🔊 बज रहा है...",
+    playPrompt: "🔊 प्रॉम्प्ट चलाएं",
+    processingVoiceResponse: "आपकी आवाज की प्रतिक्रिया संसाधित हो रही है...",
+    provideMissingField: "अधूरी {field} जानकारी देने के लिए आवाज में उत्तर दें।",
+    recordingStatus: "रिकॉर्डिंग जारी है... स्वाभाविक रूप से बोलें",
+    recordingCaptured: "✓ रिकॉर्डिंग कैप्चर की गई!",
+    clickMicPrompt: "अपने शिल्प का वर्णन करने के लिए माइक पर क्लिक करें",
+    reRecordVoice: "🎙️ आवाज फिर से रिकॉर्ड करें",
+    dragDropCraftImage: "अपनी शिल्प छवि यहाँ खींचें और छोड़ें",
+    orClickToBrowse: "या फ़ाइलें ब्राउज़ करने के लिए क्लिक करें",
+    uploadPhotoSub: "अपनी रचना का विवरण दिखाने वाली एक स्पष्ट फोटो लें।",
+    describeCraftSub: "अपनी पसंदीदा भाषा चुनें, माइक दबाएं और अपने शिल्प के बारे में स्वाभाविक रूप से बोलें।",
+    readyToGoLive: "लाइव होने के लिए तैयार!",
+    reviewBeforePublish: "मार्केटप्लेस पर प्रकाशित करने से पहले अपनी सूची की अंतिम बार समीक्षा करें।"
+  }
+};
+
+export function LanguageProvider({ children }) {
+  const [language, setLanguageState] = useState('en');
+
+  // Load saved language on mount
+  useEffect(() => {
+    try {
+      const savedLang = localStorage.getItem('craftnest_ui_language');
+      if (savedLang && (savedLang === 'en' || savedLang === 'ta' || savedLang === 'hi')) {
+        setLanguageState(savedLang);
+      } else {
+        const savedSession = localStorage.getItem('craftnest_user_session');
+        if (savedSession) {
+          const parsedUser = JSON.parse(savedSession);
+          if (parsedUser && parsedUser.preferredLanguage && (parsedUser.preferredLanguage === 'en' || parsedUser.preferredLanguage === 'ta' || parsedUser.preferredLanguage === 'hi')) {
+            setLanguageState(parsedUser.preferredLanguage);
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load UI language", e);
+    }
+  }, []);
+
+  const setLanguage = (lang) => {
+    if (lang === 'en' || lang === 'ta' || lang === 'hi') {
+      setLanguageState(lang);
+      try {
+        localStorage.setItem('craftnest_ui_language', lang);
+      } catch (e) {
+        console.error("Failed to save UI language", e);
+      }
+    }
+  };
+
+  const t = (key, params = {}) => {
+    const langDict = TRANSLATIONS[language] || TRANSLATIONS.en;
+    let text = langDict[key] || TRANSLATIONS.en[key] || key;
+    if (params && typeof params === 'object') {
+      Object.keys(params).forEach(k => {
+        text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), params[k]);
+      });
+    }
+    return text;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    return {
+      language: 'en',
+      setLanguage: () => {},
+      t: (key) => key
+    };
+  }
+  return context;
+}

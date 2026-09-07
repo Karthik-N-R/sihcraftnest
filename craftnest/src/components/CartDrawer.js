@@ -1,12 +1,14 @@
 "use client";
 
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { useRouter } from 'next/navigation';
 import './CartDrawer.css';
 
 export default function CartDrawer() {
   const router = useRouter();
   const { cart, removeFromCart, updateQuantity, cartTotal, isOpen, setIsOpen } = useCart();
+  const { t } = useLanguage() || {};
 
   if (!isOpen) return null;
 
@@ -20,15 +22,15 @@ export default function CartDrawer() {
       <div className="cart-backdrop" onClick={() => setIsOpen(false)}></div>
       <div className="cart-drawer slide-in">
         <div className="cart-header">
-          <h2>Your Cart</h2>
+          <h2>{t('yourCart')}</h2>
           <button className="close-btn" onClick={() => setIsOpen(false)} aria-label="Close cart">&times;</button>
         </div>
 
         <div className="cart-body">
           {cart.length === 0 ? (
             <div className="empty-cart">
-              <p>Your cart is empty.</p>
-              <button className="btn btn-primary mt-md" onClick={() => setIsOpen(false)}>Continue Shopping</button>
+              <p>{t('cartEmpty')}</p>
+              <button className="btn btn-primary mt-md" onClick={() => setIsOpen(false)}>{t('continueShopping')}</button>
             </div>
           ) : (
             <ul className="cart-items">
@@ -57,7 +59,7 @@ export default function CartDrawer() {
 
                       {isMaxReached && (
                         <p className="text-gray" style={{ fontSize: '0.75rem', color: '#c05621', margin: '4px 0 0 0' }}>
-                          Max stock reached ({maxStock})
+                          {t('maxStockReached')} ({maxStock})
                         </p>
                       )}
                     </div>
@@ -76,14 +78,14 @@ export default function CartDrawer() {
         {cart.length > 0 && (
           <div className="cart-footer">
             <div className="cart-total">
-              <span>Total:</span>
+              <span>{t('cartTotal')}</span>
               <span>₹{Math.round(cartTotal).toLocaleString('en-IN')}</span>
             </div>
             <button 
               className="btn btn-primary checkout-btn"
               onClick={handleProceedToCheckout}
             >
-              Proceed to Checkout
+              {t('proceedToCheckout')}
             </button>
           </div>
         )}

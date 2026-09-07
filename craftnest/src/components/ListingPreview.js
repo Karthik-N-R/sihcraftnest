@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './ListingPreview.css';
 
 export default function ListingPreview({ 
@@ -6,6 +7,7 @@ export default function ListingPreview({
   onChange, 
   imagePreview 
 }) {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
 
   const data = listingData || {};
@@ -53,8 +55,8 @@ export default function ListingPreview({
     <div className="listing-preview-container" id="listing-preview-container">
       <div className="preview-header" id="preview-header">
         <div className="preview-header-left">
-          <h2 className="preview-title" id="preview-title">Generated Catalog</h2>
-          <span className="ai-badge">✨ Gemini AI Generated</span>
+          <h2 className="preview-title" id="preview-title">{t('generatedCatalog')}</h2>
+          <span className="ai-badge">{t('aiGeneratedBadge')}</span>
         </div>
         <button 
           className="toggle-edit-btn" 
@@ -62,7 +64,7 @@ export default function ListingPreview({
           type="button"
           id="toggle-edit-btn"
         >
-          {isEditing ? 'Done Editing' : '✎ Edit Listing'}
+          {isEditing ? t('doneEditing') : t('editListing')}
         </button>
       </div>
 
@@ -70,8 +72,8 @@ export default function ListingPreview({
         <div className="preview-image-banner">
           <img src={imagePreview} alt="Craft thumbnail" className="preview-thumbnail" />
           <div>
-            <strong style={{ fontSize: '0.9rem' }}>Product Photo</strong>
-            <p className="text-gray" style={{ margin: 0, fontSize: '0.8rem' }}>Uploaded artisan photo attached to this listing</p>
+            <strong style={{ fontSize: '0.9rem' }}>{t('productPhoto')}</strong>
+            <p className="text-gray" style={{ margin: 0, fontSize: '0.8rem' }}>{t('uploadedArtisanPhoto')}</p>
           </div>
         </div>
       )}
@@ -79,7 +81,7 @@ export default function ListingPreview({
       <div className="preview-content" id="preview-content">
         {/* Title */}
         <div className="field-group" id="field-group-title">
-          <label className="field-label" htmlFor="title">Product Title</label>
+          <label className="field-label" htmlFor="title">{t('productTitle')}</label>
           {isEditing ? (
             <input 
               type="text" 
@@ -92,7 +94,7 @@ export default function ListingPreview({
             />
           ) : (
             <div className="field-value main-title" id="val-title">
-              {data.title || <span className="field-value not-provided">Not provided</span>}
+              {data.title || <span className="field-value not-provided">{t('notProvided')}</span>}
             </div>
           )}
         </div>
@@ -101,7 +103,7 @@ export default function ListingPreview({
         <div className="price-category-row" id="price-category-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px' }}>
           {/* Seller Price */}
           <div className="field-group" id="field-group-seller-price">
-            <label className="field-label" htmlFor="price">Selling Price (₹ INR)</label>
+            <label className="field-label" htmlFor="price">{t('sellingPriceLabel')}</label>
             {isEditing ? (
               <input 
                 type="number" 
@@ -114,14 +116,14 @@ export default function ListingPreview({
               />
             ) : (
               <div className="field-value price-val" id="val-seller-price" style={{ color: 'var(--terracotta)', fontWeight: 'bold' }}>
-                {displaySellerPrice || <span className="field-value not-provided">Not specified</span>}
+                {displaySellerPrice || <span className="field-value not-provided">{t('notSpecified')}</span>}
               </div>
             )}
           </div>
 
           {/* AI Suggested Price */}
           <div className="field-group" id="field-group-suggested-price">
-            <label className="field-label" htmlFor="suggestedPrice">AI Suggested Price (₹)</label>
+            <label className="field-label" htmlFor="suggestedPrice">{t('aiSuggestedPrice')}</label>
             {isEditing ? (
               <input 
                 type="number" 
@@ -134,14 +136,14 @@ export default function ListingPreview({
               />
             ) : (
               <div className="field-value" id="val-suggested-price" style={{ fontSize: '1rem' }}>
-                {displaySuggestedPrice || <span className="field-value not-provided">Not generated</span>}
+                {displaySuggestedPrice || <span className="field-value not-provided">{t('notGenerated')}</span>}
               </div>
             )}
           </div>
 
           {/* Category */}
           <div className="field-group" id="field-group-category">
-            <label className="field-label" htmlFor="category">Category</label>
+            <label className="field-label" htmlFor="category">{t('category')}</label>
             {isEditing ? (
               <input 
                 type="text" 
@@ -164,7 +166,7 @@ export default function ListingPreview({
         <div className="details-grid" id="mandatory-details-grid">
           {/* Quantity */}
           <div className="field-group" id="field-group-quantity">
-            <label className="field-label" htmlFor="quantity">Available Quantity</label>
+            <label className="field-label" htmlFor="quantity">{t('availableQuantityLabel')}</label>
             {isEditing ? (
               <input 
                 type="number" 
@@ -177,14 +179,14 @@ export default function ListingPreview({
               />
             ) : (
               <div className="field-value" id="val-quantity">
-                {data.quantity !== undefined && data.quantity !== null ? `${data.quantity} units` : <span className="field-value not-provided">Not provided</span>}
+                {data.quantity !== undefined && data.quantity !== null ? `${data.quantity} ${t('units')}` : <span className="field-value not-provided">{t('notProvided')}</span>}
               </div>
             )}
           </div>
 
           {/* Size / Dimensions */}
           <div className="field-group" id="field-group-size">
-            <label className="field-label" htmlFor="size">Size / Dimensions</label>
+            <label className="field-label" htmlFor="size">{t('sizeDimensionsLabel')}</label>
             {isEditing ? (
               <input 
                 type="text" 
@@ -202,9 +204,9 @@ export default function ListingPreview({
               <div className="field-value" id="val-size">
                 {sizeVal ? (
                   <span>
-                    {sizeVal} {data.sizeStatus === 'estimated' && <span className="badge badge-terracotta ml-xs" style={{ fontSize: '0.7rem' }}>AI Estimated</span>}
+                    {sizeVal} {data.sizeStatus === 'estimated' && <span className="badge badge-terracotta ml-xs" style={{ fontSize: '0.7rem' }}>{t('aiEstimated')}</span>}
                   </span>
-                ) : <span className="field-value not-provided">Not provided</span>}
+                ) : <span className="field-value not-provided">{t('notProvided')}</span>}
               </div>
             )}
           </div>
@@ -212,7 +214,7 @@ export default function ListingPreview({
 
         {/* Description */}
         <div className="field-group" id="field-group-description">
-          <label className="field-label" htmlFor="description">Product Description</label>
+          <label className="field-label" htmlFor="description">{t('productDescription')}</label>
           {isEditing ? (
             <textarea 
               id="description" 
@@ -225,7 +227,7 @@ export default function ListingPreview({
             />
           ) : (
             <div className="field-value description-val" id="val-description">
-              {data.description || <span className="field-value not-provided">Not provided</span>}
+              {data.description || <span className="field-value not-provided">{t('notProvided')}</span>}
             </div>
           )}
         </div>
@@ -233,7 +235,7 @@ export default function ListingPreview({
         <div className="details-grid" id="details-grid">
           {/* Materials */}
           <div className="field-group" id="field-group-materials">
-            <label className="field-label" htmlFor="materials">Materials</label>
+            <label className="field-label" htmlFor="materials">{t('materialsLabel')}</label>
             {isEditing ? (
               <input 
                 type="text" 
@@ -246,14 +248,14 @@ export default function ListingPreview({
               />
             ) : (
               <div className="field-value" id="val-materials">
-                {materialsArray.length > 0 ? materialsArray.join(', ') : <span className="field-value not-provided">Not provided</span>}
+                {materialsArray.length > 0 ? materialsArray.join(', ') : <span className="field-value not-provided">{t('notProvided')}</span>}
               </div>
             )}
           </div>
 
           {/* Colour */}
           <div className="field-group" id="field-group-colour">
-            <label className="field-label" htmlFor="colour">Colour</label>
+            <label className="field-label" htmlFor="colour">{t('colourLabel')}</label>
             {isEditing ? (
               <input 
                 type="text" 
@@ -266,7 +268,7 @@ export default function ListingPreview({
               />
             ) : (
               <div className="field-value" id="val-colour">
-                {data.colour || <span className="field-value not-provided">Not provided</span>}
+                {data.colour || <span className="field-value not-provided">{t('notProvided')}</span>}
               </div>
             )}
           </div>
@@ -275,7 +277,7 @@ export default function ListingPreview({
         <div className="details-grid" id="details-grid-secondary">
           {/* Care Instructions */}
           <div className="field-group" id="field-group-care">
-            <label className="field-label" htmlFor="careInstructions">Care Instructions</label>
+            <label className="field-label" htmlFor="careInstructions">{t('careInstructionsLabel')}</label>
             {isEditing ? (
               <input 
                 type="text" 
@@ -288,7 +290,7 @@ export default function ListingPreview({
               />
             ) : (
               <div className="field-value" id="val-care">
-                {data.careInstructions || <span className="field-value not-provided">Not provided</span>}
+                {data.careInstructions || <span className="field-value not-provided">{t('notProvided')}</span>}
               </div>
             )}
           </div>
@@ -296,7 +298,7 @@ export default function ListingPreview({
 
         {/* SEO Tags */}
         <div className="field-group" id="field-group-seo">
-          <label className="field-label" htmlFor="seoTags">Marketplace Tags</label>
+          <label className="field-label" htmlFor="seoTags">{t('marketplaceTags')}</label>
           {isEditing ? (
             <input 
               type="text" 
@@ -316,7 +318,7 @@ export default function ListingPreview({
                   ))}
                 </div>
               ) : (
-                <span className="field-value not-provided">No tags generated</span>
+                <span className="field-value not-provided">{t('noTagsGenerated')}</span>
               )}
             </div>
           )}

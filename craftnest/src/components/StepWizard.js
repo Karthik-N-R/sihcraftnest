@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './StepWizard.css';
 
 export default function StepWizard({ 
@@ -11,6 +12,8 @@ export default function StepWizard({
   canProceed, 
   children 
 }) {
+  const { t } = useLanguage();
+
   return (
     <div className="step-wizard-container" id="step-wizard-container">
       <div className="step-wizard-header" id="step-wizard-header">
@@ -41,7 +44,7 @@ export default function StepWizard({
           id="step-btn-back"
           type="button"
         >
-          Back
+          {t('backBtn')}
         </button>
         {currentStep < steps.length - 1 ? (
           <button 
@@ -51,7 +54,7 @@ export default function StepWizard({
             id="step-btn-next"
             type="button"
           >
-            Next
+            {t('nextBtn')}
           </button>
         ) : (
           <button 
@@ -61,7 +64,7 @@ export default function StepWizard({
             id="step-btn-finish"
             type="button"
           >
-            Publish
+            {t('publish')}
           </button>
         )}
       </div>

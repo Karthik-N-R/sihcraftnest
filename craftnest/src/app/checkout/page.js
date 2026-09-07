@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { useCart } from '../../context/CartContext';
 import { useProducts } from '../../context/ProductContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import './checkout.css';
@@ -12,6 +13,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { cart, cartTotal, clearCart } = useCart();
   const { refreshProducts } = useProducts() || {};
+  const { t } = useLanguage() || {};
 
   const [buyerInfo, setBuyerInfo] = useState({
     fullName: 'Rohan Sharma',
@@ -48,9 +50,7 @@ export default function CheckoutPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Clear cart in context and local storage
         clearCart();
-        // Refresh products in ProductContext so stock updates on shop page
         if (refreshProducts) {
           await refreshProducts();
         }
@@ -78,24 +78,24 @@ export default function CheckoutPage() {
           <div className="order-success-card animate-fade-in">
             <div className="success-header text-center">
               <div className="success-icon">🎉</div>
-              <h1 className="text-gradient">Order Placed Successfully!</h1>
-              <p className="order-id-badge">Order ID: <strong>{orderSuccess.orderId}</strong></p>
+              <h1 className="text-gradient">{t('orderSuccessTitle')}</h1>
+              <p className="order-id-badge">{t('orderId')}: <strong>{orderSuccess.orderId}</strong></p>
               <p className="text-gray mt-xs" style={{ fontSize: '0.85rem' }}>
-                Thank you for supporting traditional Indian artisans on CraftNest!
+                {t('thankYouSupport')}
               </p>
             </div>
 
             <div className="order-details-section mt-lg">
-              <h3>Shipping Details</h3>
+              <h3>{t('shippingDetails')}</h3>
               <div className="buyer-summary-box">
-                <p><strong>Recipient:</strong> {orderSuccess.buyerInfo?.fullName || buyerInfo.fullName}</p>
-                <p><strong>Phone:</strong> {orderSuccess.buyerInfo?.phone || buyerInfo.phone}</p>
-                <p><strong>Delivery Address:</strong> {orderSuccess.buyerInfo?.address || buyerInfo.address}, {orderSuccess.buyerInfo?.city || buyerInfo.city}</p>
+                <p><strong>{t('recipient')}:</strong> {orderSuccess.buyerInfo?.fullName || buyerInfo.fullName}</p>
+                <p><strong>{t('phoneNumber')}:</strong> {orderSuccess.buyerInfo?.phone || buyerInfo.phone}</p>
+                <p><strong>{t('streetAddress')}:</strong> {orderSuccess.buyerInfo?.address || buyerInfo.address}, {orderSuccess.buyerInfo?.city || buyerInfo.city}</p>
               </div>
             </div>
 
             <div className="order-items-section mt-lg">
-              <h3>Purchased Items</h3>
+              <h3>{t('purchasedItems')}</h3>
               <div className="purchased-items-list">
                 {purchasedItems.map((item, idx) => (
                   <div key={idx} className="purchased-item-row">
@@ -114,14 +114,14 @@ export default function CheckoutPage() {
               </div>
 
               <div className="purchased-grand-total">
-                <span>Total Amount Paid:</span>
+                <span>{t('totalPaid')}</span>
                 <span className="total-price">₹{Math.round(totalAmount).toLocaleString('en-IN')}</span>
               </div>
             </div>
 
             <div className="text-center mt-xl">
               <Link href="/shop" className="btn btn-primary" style={{ padding: '12px 32px', fontSize: '1.1rem' }}>
-                Return to Marketplace
+                {t('returnToMarketplace')}
               </Link>
             </div>
           </div>
@@ -135,8 +135,8 @@ export default function CheckoutPage() {
       <Navbar />
 
       <div className="container mt-xl">
-        <h1 className="text-center mb-sm font-accent text-gradient" style={{ fontSize: '2.5rem' }}>Complete Your Order</h1>
-        <p className="text-center text-gray mb-xl">Directly empowering authentic traditional artisans.</p>
+        <h1 className="text-center mb-sm font-accent text-gradient" style={{ fontSize: '2.5rem' }}>{t('completeOrder')}</h1>
+        <p className="text-center text-gray mb-xl">{t('empoweringArtisans')}</p>
 
         {errorMessage && (
           <div className="checkout-error-banner animate-fade-in" role="alert">
@@ -147,20 +147,20 @@ export default function CheckoutPage() {
 
         {cart.length === 0 ? (
           <div className="empty-checkout-card text-center">
-            <h3>Your cart is currently empty</h3>
-            <p className="text-gray mb-lg">Browse our handcrafted catalog to add items to your cart.</p>
+            <h3>{t('cartCurrentlyEmpty')}</h3>
+            <p className="text-gray mb-lg">{t('tryDifferentCategory')}</p>
             <Link href="/shop" className="btn btn-primary">
-              Browse Marketplace
+              {t('browseMarketplace')}
             </Link>
           </div>
         ) : (
           <div className="checkout-grid">
             {/* Left Column: Buyer Shipping Details Form */}
             <div className="checkout-form-card">
-              <h2 className="mb-md">Buyer Delivery Details</h2>
+              <h2 className="mb-md">{t('buyerDetails')}</h2>
               <form onSubmit={handlePlaceOrder}>
                 <div className="form-group mb-md">
-                  <label className="field-label" htmlFor="fullName">Full Name</label>
+                  <label className="field-label" htmlFor="fullName">{t('fullName')}</label>
                   <input 
                     type="text" 
                     id="fullName"
@@ -172,7 +172,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="form-group mb-md">
-                  <label className="field-label" htmlFor="phone">Phone Number</label>
+                  <label className="field-label" htmlFor="phone">{t('phoneNumber')}</label>
                   <input 
                     type="text" 
                     id="phone"
@@ -184,7 +184,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="form-group mb-md">
-                  <label className="field-label" htmlFor="address">Street Address</label>
+                  <label className="field-label" htmlFor="address">{t('streetAddress')}</label>
                   <input 
                     type="text" 
                     id="address"
@@ -196,7 +196,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="form-group mb-lg">
-                  <label className="field-label" htmlFor="city">City / Pincode</label>
+                  <label className="field-label" htmlFor="city">{t('cityPincode')}</label>
                   <input 
                     type="text" 
                     id="city"
@@ -212,14 +212,14 @@ export default function CheckoutPage() {
                   className="btn btn-primary btn-block place-order-btn"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Processing Order...' : `Place Order (₹${Math.round(cartTotal).toLocaleString('en-IN')})`}
+                  {isSubmitting ? t('processingOrder') : `${t('placeOrder')} (₹${Math.round(cartTotal).toLocaleString('en-IN')})`}
                 </button>
               </form>
             </div>
 
             {/* Right Column: Order Summary */}
             <div className="checkout-summary-card">
-              <h2 className="mb-md">Order Summary</h2>
+              <h2 className="mb-md">{t('orderSummary')}</h2>
               
               <div className="summary-items-list">
                 {cart.map(item => (
@@ -240,15 +240,15 @@ export default function CheckoutPage() {
 
               <div className="summary-pricing-breakdown mt-lg">
                 <div className="pricing-line">
-                  <span>Subtotal</span>
+                  <span>{t('subtotal')}</span>
                   <span>₹{Math.round(cartTotal).toLocaleString('en-IN')}</span>
                 </div>
                 <div className="pricing-line">
-                  <span>Artisan Shipping</span>
-                  <span style={{ color: '#2f855a', fontWeight: 'bold' }}>FREE</span>
+                  <span>{t('artisanShipping')}</span>
+                  <span style={{ color: '#2f855a', fontWeight: 'bold' }}>{t('free')}</span>
                 </div>
                 <div className="pricing-line total-line">
-                  <span>Total Amount</span>
+                  <span>{t('totalAmount')}</span>
                   <span>₹{Math.round(cartTotal).toLocaleString('en-IN')}</span>
                 </div>
               </div>

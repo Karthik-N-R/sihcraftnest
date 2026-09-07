@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './CraftDetectionResult.css';
 
 export default function CraftDetectionResult({ 
@@ -11,6 +12,7 @@ export default function CraftDetectionResult({
   onOverride,
   isProcessing = false
 }) {
+  const { t } = useLanguage();
   const currentLabel = result?.craft || result?.label || detectedType;
   const rawConfidence = result?.confidence !== undefined ? result.confidence : (confidence <= 1 ? confidence : confidence / 100);
   const displayConfidence = (rawConfidence <= 1 ? rawConfidence * 100 : rawConfidence).toFixed(1);
@@ -68,11 +70,11 @@ export default function CraftDetectionResult({
             <img src={imagePreview} alt="Craft being classified" className="detection-preview-img" />
           </div>
         )}
-        <h4 className="mb-md">Analyzing craft image...</h4>
+        <h4 className="mb-md">{t('analyzingImage')}</h4>
         <div className="craft-loader mt-lg mb-lg" style={{ justifyContent: 'center' }}>
           <span></span><span></span><span></span><span></span>
         </div>
-        <p className="text-gray" style={{ fontSize: '0.9rem' }}>Detecting artisan craft patterns, style, and region using trained EfficientNet AI...</p>
+        <p className="text-gray" style={{ fontSize: '0.9rem' }}>{t('analyzingSubtext')}</p>
       </div>
     );
   }
@@ -86,15 +88,15 @@ export default function CraftDetectionResult({
       )}
 
       <div className="detection-header" id="detection-header">
-        <h3 className="detection-title" id="detection-title">AI Craft Classification</h3>
+        <h3 className="detection-title" id="detection-title">{t('aiClassification')}</h3>
         <span className="confidence-badge" id="confidence-badge">
-          {displayConfidence}% confidence
+          {t('confidence', { percent: displayConfidence })}
         </span>
       </div>
 
       <div className="detection-body" id="detection-body">
         <div className="detected-type-group" id="detected-type-group">
-          <span className="label" id="type-label">Detected Craft</span>
+          <span className="label" id="type-label">{t('detectedCraft')}</span>
           
           {isEditingCategory ? (
             <select 
@@ -119,7 +121,7 @@ export default function CraftDetectionResult({
                 onClick={() => setIsEditingCategory(true)}
                 title="Change craft type"
               >
-                ✎ Override
+                {t('override')}
               </button>
             </div>
           )}
@@ -144,7 +146,7 @@ export default function CraftDetectionResult({
 
         {currentTags.length > 0 && (
           <div className="tags-container" id="tags-container">
-            <span className="label" id="tags-label">Detected Attributes</span>
+            <span className="label" id="tags-label">{t('detectedAttributes')}</span>
             <div className="tags-list" id="tags-list">
               {currentTags.map((tag, i) => (
                 <span key={i} className="tag-pill" id={`tag-pill-${i}`}>

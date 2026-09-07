@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './VoiceRecorder.css';
 
 const MAX_RECORDING_SECONDS = 30;
@@ -8,6 +9,7 @@ export default function VoiceRecorder({
   setLanguage, 
   onRecordingComplete 
 }) {
+  const { t } = useLanguage();
   const [isRecording, setIsRecording] = useState(false);
   const [secondsElapsed, setSecondsElapsed] = useState(0);
   const [recordedAudioUrl, setRecordedAudioUrl] = useState(null);
@@ -215,13 +217,13 @@ export default function VoiceRecorder({
       <div className="record-status" id="record-status">
         {isRecording ? (
           <div>
-            <span>Recording... Speak naturally</span>
+            <span>{t('recordingStatus')}</span>
             <div className="record-timer">{formatTimer(secondsElapsed)} / 0:30</div>
           </div>
         ) : recordedAudioUrl ? (
-          <span style={{ color: 'var(--emerald)', fontWeight: 600 }}>✓ Recording captured!</span>
+          <span style={{ color: 'var(--emerald)', fontWeight: 600 }}>{t('recordingCaptured')}</span>
         ) : (
-          "Click the mic to describe your craft"
+          t('clickMicPrompt')
         )}
       </div>
 
@@ -247,7 +249,7 @@ export default function VoiceRecorder({
             className="re-record-btn"
             onClick={handleReRecord}
           >
-            🎙️ Re-record Voice
+            {t('reRecordVoice')}
           </button>
         </div>
       )}

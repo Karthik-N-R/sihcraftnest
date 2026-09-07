@@ -81,7 +81,8 @@ export function AuthProvider({ children }) {
         id: found.id,
         name: found.name,
         email: found.email,
-        role: found.role
+        role: found.role,
+        preferredLanguage: found.preferredLanguage || 'en'
       };
       setUser(sessionUser);
       return { success: true, user: sessionUser };
@@ -90,11 +91,12 @@ export function AuthProvider({ children }) {
     return { success: false, error: 'Invalid email or password. Try demo accounts below.' };
   };
 
-  const signup = ({ name, email, password, role = 'buyer' }) => {
+  const signup = ({ name, email, password, role = 'buyer', preferredLanguage = 'en' }) => {
     const cleanName = (name || '').trim();
     const cleanEmail = (email || '').trim().toLowerCase();
     const cleanPassword = (password || '').trim();
     const cleanRole = role === 'seller' ? 'seller' : 'buyer';
+    const cleanLang = (preferredLanguage === 'ta' || preferredLanguage === 'hi') ? preferredLanguage : 'en';
 
     if (!cleanName || !cleanEmail || !cleanPassword) {
       return { success: false, error: 'All fields are required.' };
@@ -110,7 +112,8 @@ export function AuthProvider({ children }) {
       name: cleanName,
       email: cleanEmail,
       password: cleanPassword,
-      role: cleanRole
+      role: cleanRole,
+      preferredLanguage: cleanLang
     };
 
     setRegisteredUsers(prev => [...prev, newUser]);
@@ -119,7 +122,8 @@ export function AuthProvider({ children }) {
       id: newUser.id,
       name: newUser.name,
       email: newUser.email,
-      role: newUser.role
+      role: newUser.role,
+      preferredLanguage: newUser.preferredLanguage
     };
 
     setUser(sessionUser);

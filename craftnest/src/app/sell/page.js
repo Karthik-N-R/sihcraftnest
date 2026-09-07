@@ -11,6 +11,7 @@ import MissingFieldCollector from '../../components/MissingFieldCollector';
 import { classifyImage } from '../../lib/classifiers/classifierProvider';
 import { useProducts } from '../../context/ProductContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from 'next/navigation';
 import './sell.css';
 
@@ -18,6 +19,7 @@ export default function SellPage() {
   const router = useRouter();
   const { refreshProducts } = useProducts() || {};
   const { user, isAuthenticated, isLoading } = useAuth() || {};
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -44,14 +46,83 @@ export default function SellPage() {
   const [followUpError, setFollowUpError] = useState(null);
   const [sizeConfirmed, setSizeConfirmed] = useState(false);
 
+  // Background AI Image Enhancement state
+  const [enhancedImage, setEnhancedImage] = useState(null);
+  const [imageEnhancementStatus, setImageEnhancementStatus] = useState('idle'); // 'idle' | 'processing' | 'ready' | 'failed'
+
   const steps = [
-    { title: "Upload Photo", icon: "📷" },
-    { title: "Detect Craft", icon: "🔍" },
-    { title: "Record Voice", icon: "🎙️" },
-    { title: "Transcribe", icon: "📝" },
-    { title: "Generate Listing", icon: "✨" },
-    { title: "Review & Publish", icon: "🚀" }
+    { title: t('uploadPhoto'), icon: "📷" },
+    { title: t('detectCraft'), icon: "🔍" },
+    { title: t('recordVoice'), icon: "🎙️" },
+    { title: t('transcribe'), icon: "📝" },
+    { title: t('generateListing'), icon: "✨" },
+    { title: t('reviewPublish'), icon: "🚀" }
   ];
+
+  // Browser Image Compression (~1024px max dimension)
+  const compressImageForEnhancement = (imageDataUrl, maxDim = 1024) => {
+    return new Promise((resolve) => {
+      if (typeof window === 'undefined' || !imageDataUrl) {
+        return resolve(imageDataUrl);
+      }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width <= maxDim && height <= maxDim) {
+          return resolve(imageDataUrl);
+        }
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressed = canvas.toDataURL('image/jpeg', 0.85);
+        resolve(compressed);
+      };
+      img.onerror = () => resolve(imageDataUrl);
+      img.src = imageDataUrl;
+    });
+  };
+
+  // Trigger background AI image enhancement asynchronously
+  const triggerBackgroundEnhancement = async (previewUrl) => {
+    if (!previewUrl || imageEnhancementStatus === 'processing' || imageEnhancementStatus === 'ready') return;
+    setImageEnhancementStatus('processing');
+
+    try {
+      const compressed = await compressImageForEnhancement(previewUrl, 1024);
+      const res = await fetch('/api/enhance-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: compressed })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.enhancedImage) {
+        setEnhancedImage(data.enhancedImage);
+        setImageEnhancementStatus('ready');
+      } else {
+        console.warn('Background AI image enhancement note:', data?.error || data);
+        setImageEnhancementStatus('failed');
+      }
+    } catch (err) {
+      console.warn('Background AI image enhancement network error:', err);
+      setImageEnhancementStatus('failed');
+    }
+  };
 
   // Helper to determine missing mandatory fields in fixed sequence: size -> quantity -> price
   const getMissingMandatoryFields = (listing) => {
@@ -92,6 +163,9 @@ export default function SellPage() {
   // Step 0: Handle Image Selection / Removal
   const handleImageSelect = (file, dataUrl) => {
     setErrorMessage(null);
+    setEnhancedImage(null);
+    setImageEnhancementStatus('idle');
+
     if (!file) {
       setImageFile(null);
       setImagePreview('');
@@ -109,7 +183,7 @@ export default function SellPage() {
     }
   };
 
-  // Step 1: Trigger Craft Classification
+  // Step 1: Trigger Craft Classification & Background Image Enhancement
   const processImageClassification = async () => {
     if (!imageFile) return;
     setIsProcessing(true);
@@ -117,6 +191,8 @@ export default function SellPage() {
     setErrorMessage(null);
     setCurrentStep(1);
     
+    let targetPreview = imagePreview;
+
     try {
       const result = await classifyImage(imageFile);
       setDetectionResult(result);
@@ -134,6 +210,10 @@ export default function SellPage() {
     } finally {
       setIsProcessing(false);
       setProcessingMessage('');
+      // Trigger AI image enhancement in the BACKGROUND asynchronously after classification completes
+      if (targetPreview && imageEnhancementStatus === 'idle') {
+        triggerBackgroundEnhancement(targetPreview);
+      }
     }
   };
 
@@ -375,11 +455,13 @@ export default function SellPage() {
     setErrorMessage(null);
 
     try {
+      const finalImage = (imageEnhancementStatus === 'ready' && enhancedImage) ? enhancedImage : imagePreview;
+
       const finalData = {
         ...listingData,
         artisanId: user?.id || "u_demo_seller",
         artisanName: user?.name || "Rajesh Kumar (Artisan)",
-        image: imagePreview
+        image: finalImage
       };
 
       const res = await fetch('/api/publish', {
@@ -437,8 +519,8 @@ export default function SellPage() {
       <Navbar />
       
       <div className="container mt-xl">
-        <h1 className="text-center mb-sm font-accent text-gradient" style={{ fontSize: '3rem' }}>Digitize Your Craft</h1>
-        <p className="text-center text-gray mb-xl">Let AI transform your voice & photo into a global marketplace catalog.</p>
+        <h1 className="text-center mb-sm font-accent text-gradient" style={{ fontSize: '3rem' }}>{t('digitizeCraftTitle')}</h1>
+        <p className="text-center text-gray mb-xl">{t('digitizeCraftSub')}</p>
 
         {errorMessage && (
           <div className="sell-error-banner animate-fade-in" role="alert">
@@ -467,8 +549,8 @@ export default function SellPage() {
           {/* Step 0: Upload Image */}
           {currentStep === 0 && (
             <div className="wizard-content-step animate-fade-in">
-              <h3 className="mb-md text-center">Upload a photo of your craft</h3>
-              <p className="text-center text-gray mb-lg">Take a clear photo showing the details and craftsmanship of your creation.</p>
+              <h3 className="mb-md text-center">{t('uploadPhoto')}</h3>
+              <p className="text-center text-gray mb-lg">{t('uploadPhotoSub')}</p>
               <ImageUploader 
                 onImageSelect={handleImageSelect} 
                 currentPreview={imagePreview} 
@@ -491,8 +573,8 @@ export default function SellPage() {
           {/* Step 2: Record Voice */}
           {currentStep === 2 && (
             <div className="wizard-content-step animate-fade-in">
-              <h3 className="mb-md text-center">Describe your craft</h3>
-              <p className="text-center mb-lg">Select your preferred language, press the microphone, and speak naturally about materials, techniques, and the story behind your creation.</p>
+              <h3 className="mb-md text-center">{t('recordVoice')}</h3>
+              <p className="text-center mb-lg">{t('describeCraftSub')}</p>
               <VoiceRecorder 
                 language={language}
                 setLanguage={setLanguage}
@@ -572,7 +654,7 @@ export default function SellPage() {
                   <ListingPreview 
                     listingData={listingData} 
                     onChange={(newData) => setListingData(newData)}
-                    imagePreview={imagePreview}
+                    imagePreview={(imageEnhancementStatus === 'ready' && enhancedImage) ? enhancedImage : imagePreview}
                   />
                 );
               })()}
@@ -582,8 +664,8 @@ export default function SellPage() {
           {/* Step 5: Final Review & Publish */}
           {currentStep === 5 && (
             <div className="wizard-content-step animate-fade-in text-center">
-              <h2 className="text-gradient mb-md">Ready to go live!</h2>
-              <p className="mb-xl">Review your listing one last time before publishing to the marketplace feed.</p>
+              <h2 className="text-gradient mb-md">{t('readyToGoLive')}</h2>
+              <p className="mb-xl">{t('reviewBeforePublish')}</p>
               
               {isProcessing ? (
                 <div className="step-processing-status">
@@ -594,7 +676,56 @@ export default function SellPage() {
                 </div>
               ) : (
                 <div className="final-preview-card">
-                  <img src={imagePreview || '/images/products/pottery-1.jpg'} alt="Product preview" />
+                  <div style={{ position: 'relative' }}>
+                    <img 
+                      src={(imageEnhancementStatus === 'ready' && enhancedImage) ? enhancedImage : (imagePreview || '/images/products/pottery-1.jpg')} 
+                      alt="Product preview" 
+                    />
+                    {imageEnhancementStatus === 'processing' && (
+                      <span 
+                        className="badge" 
+                        style={{ 
+                          position: 'absolute', 
+                          top: '10px', 
+                          right: '10px', 
+                          background: 'rgba(255, 255, 255, 0.92)', 
+                          color: '#2d3748', 
+                          fontSize: '0.78rem', 
+                          fontWeight: '600',
+                          padding: '5px 10px', 
+                          borderRadius: '20px', 
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        ✨ AI enhancement processing...
+                      </span>
+                    )}
+                    {imageEnhancementStatus === 'ready' && (
+                      <span 
+                        className="badge" 
+                        style={{ 
+                          position: 'absolute', 
+                          top: '10px', 
+                          right: '10px', 
+                          background: '#276749', 
+                          color: '#ffffff', 
+                          fontSize: '0.78rem', 
+                          fontWeight: '600',
+                          padding: '5px 10px', 
+                          borderRadius: '20px', 
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        ✨ AI Enhanced
+                      </span>
+                    )}
+                  </div>
                   <div className="final-preview-details text-left">
                     <span className="badge badge-terracotta">{listingData?.category || 'Handcrafted'}</span>
                     <h3 className="mt-sm mb-xs">{listingData?.title || 'Handcrafted Item'}</h3>

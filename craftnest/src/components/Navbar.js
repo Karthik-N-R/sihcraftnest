@@ -4,31 +4,58 @@ import React from 'react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const { cartCount = 0, setIsOpen } = useCart() || {};
   const { user, logout } = useAuth() || {};
+  const { language, setLanguage, t } = useLanguage() || {};
   const itemCount = cartCount;
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
         <Link href="/" className="navbar-logo">
-          CraftNest
+          {t('appName')}
         </Link>
 
         <div className="navbar-links">
-          <Link href="/shop" className="nav-link">Shop Crafts</Link>
+          <Link href="/shop" className="nav-link">{t('shopCrafts')}</Link>
           {user?.role === 'seller' ? (
-            <Link href="/dashboard" className="nav-link">Seller Dashboard</Link>
+            <Link href="/dashboard" className="nav-link">{t('sellerDashboard')}</Link>
           ) : (
-            <Link href="/sell" className="nav-link">Artisan Portal</Link>
+            <Link href="/sell" className="nav-link">{t('artisanPortal')}</Link>
           )}
         </div>
 
-        <div className="navbar-actions">
-          <Link href="/sell" className="btn-sell">+ Sell Craft</Link>
+        <div className="navbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* UI Language Selector */}
+          <div className="ui-language-selector" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ fontSize: '1.1rem' }} aria-hidden="true">🌐</span>
+            <select
+              value={language || 'en'}
+              onChange={(e) => setLanguage && setLanguage(e.target.value)}
+              className="lang-select-dropdown"
+              style={{
+                background: '#fffaf5',
+                border: '1px solid #fbd38d',
+                borderRadius: '8px',
+                padding: '4px 8px',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+                color: '#7b341e',
+                cursor: 'pointer'
+              }}
+              aria-label="Select UI Language"
+            >
+              <option value="en">English</option>
+              <option value="ta">தமிழ்</option>
+              <option value="hi">हिन्दी</option>
+            </select>
+          </div>
+
+          <Link href="/sell" className="btn-sell">{t('sellCraft')}</Link>
 
           {/* Cart Icon */}
           <button 
@@ -48,12 +75,7 @@ const Navbar = () => {
 
           {/* User Auth Info & Actions */}
           {user ? (
-            <div className="user-profile-menu" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {user.role === 'seller' && (
-                <Link href="/dashboard" className="nav-link" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
-                  Dashboard
-                </Link>
-              )}
+            <div className="user-profile-menu" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span className="user-name-label" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
                 👤 {user.name}
               </span>
@@ -74,16 +96,16 @@ const Navbar = () => {
                   cursor: 'pointer'
                 }}
               >
-                Logout
+                {t('logout')}
               </button>
             </div>
           ) : (
             <div className="auth-nav-buttons" style={{ display: 'flex', gap: '8px' }}>
               <Link href="/login" className="nav-link" style={{ fontSize: '0.9rem', fontWeight: 600 }}>
-                Log In
+                {t('logIn')}
               </Link>
               <Link href="/signup" className="nav-link" style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--terracotta)' }}>
-                Sign Up
+                {t('signUp')}
               </Link>
             </div>
           )}

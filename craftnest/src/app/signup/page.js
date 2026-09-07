@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '../login/login.css';
@@ -10,11 +11,13 @@ import '../login/login.css';
 export default function SignupPage() {
   const router = useRouter();
   const { signup } = useAuth();
+  const { language, setLanguage, t } = useLanguage() || {};
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('seller'); // Default to Seller
+  const [preferredLanguage, setPreferredLanguage] = useState(language || 'en');
   const [errorMessage, setErrorMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -23,10 +26,13 @@ export default function SignupPage() {
     setErrorMessage(null);
     setIsSubmitting(true);
 
-    const res = signup({ name, email, password, role });
+    const res = signup({ name, email, password, role, preferredLanguage });
     setIsSubmitting(false);
 
     if (res.success) {
+      if (setLanguage) {
+        setLanguage(preferredLanguage);
+      }
       if (role === 'seller') {
         router.push('/sell');
       } else {
@@ -44,8 +50,8 @@ export default function SignupPage() {
       <div className="container mt-xl">
         <div className="auth-card animate-fade-in">
           <div className="auth-header text-center">
-            <h2>Join CraftNest</h2>
-            <p className="text-gray">Create an account as an Artisan Seller or Buyer.</p>
+            <h2>{t('joinCraftNest')}</h2>
+            <p className="text-gray">{t('createAccountSub')}</p>
           </div>
 
           {errorMessage && (
@@ -57,28 +63,28 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="auth-form mt-md">
             {/* Account Role Selection */}
             <div className="form-group mb-md">
-              <label className="field-label">Select Account Role</label>
+              <label className="field-label">{t('selectRole')}</label>
               <div className="role-selector-grid">
                 <div 
                   className={`role-card-option ${role === 'seller' ? 'selected' : ''}`}
                   onClick={() => setRole('seller')}
                 >
-                  <span className="role-title">🎨 Artisan Seller</span>
-                  <span className="role-desc">Digitize & sell handcrafted art</span>
+                  <span className="role-title">{t('artisanSellerRole')}</span>
+                  <span className="role-desc">{t('sellerDesc')}</span>
                 </div>
                 <div 
                   className={`role-card-option ${role === 'buyer' ? 'selected' : ''}`}
                   onClick={() => setRole('buyer')}
                 >
-                  <span className="role-title">🛍️ Craft Buyer</span>
-                  <span className="role-desc">Discover & buy unique crafts</span>
+                  <span className="role-title">{t('craftBuyerRole')}</span>
+                  <span className="role-desc">{t('buyerDesc')}</span>
                 </div>
               </div>
             </div>
 
             {/* Name */}
             <div className="form-group mb-md">
-              <label className="field-label" htmlFor="signup-name">Full Name</label>
+              <label className="field-label" htmlFor="signup-name">{t('fullName')}</label>
               <input 
                 type="text" 
                 id="signup-name"
@@ -92,7 +98,7 @@ export default function SignupPage() {
 
             {/* Email */}
             <div className="form-group mb-md">
-              <label className="field-label" htmlFor="signup-email">Email Address</label>
+              <label className="field-label" htmlFor="signup-email">{t('emailAddress')}</label>
               <input 
                 type="email" 
                 id="signup-email"
@@ -104,9 +110,25 @@ export default function SignupPage() {
               />
             </div>
 
+            {/* Preferred Language */}
+            <div className="form-group mb-md">
+              <label className="field-label" htmlFor="signup-language">{t('preferredLanguage')}</label>
+              <select
+                id="signup-language"
+                className="input select"
+                value={preferredLanguage}
+                onChange={(e) => setPreferredLanguage(e.target.value)}
+                style={{ height: '44px' }}
+              >
+                <option value="en">English</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+              </select>
+            </div>
+
             {/* Password */}
             <div className="form-group mb-lg">
-              <label className="field-label" htmlFor="signup-password">Password</label>
+              <label className="field-label" htmlFor="signup-password">{t('password')}</label>
               <input 
                 type="password" 
                 id="signup-password"
@@ -123,15 +145,15 @@ export default function SignupPage() {
               className="btn btn-primary btn-block auth-submit-btn"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Creating Account...' : `Sign Up as ${role === 'seller' ? 'Seller' : 'Buyer'}`}
+              {isSubmitting ? '...' : (role === 'seller' ? t('signUpAsSeller') : t('signUpAsBuyer'))}
             </button>
           </form>
 
           <div className="auth-footer text-center mt-lg">
             <p className="text-gray">
-              Already have an account?{' '}
+              {t('alreadyHaveAccount')}{' '}
               <Link href="/login" className="auth-link">
-                Log in here
+                {t('logInHere')}
               </Link>
             </p>
           </div>

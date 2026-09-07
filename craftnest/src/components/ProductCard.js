@@ -1,9 +1,11 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart() || { addToCart: () => {} };
+  const { t } = useLanguage() || {};
 
   if (!product) return null;
 
@@ -28,7 +30,7 @@ const ProductCard = ({ product }) => {
 
         {isOutOfStock ? (
           <span className="product-badge out-of-stock-badge">
-            OUT OF STOCK
+            {t('outOfStock')}
           </span>
         ) : (
           <span className="product-category">
@@ -49,7 +51,7 @@ const ProductCard = ({ product }) => {
         </div>
 
         <p className="product-artisan">
-          by {artisanName}
+          {t('byArtisan')} {artisanName}
         </p>
 
         <div className="product-rating">
@@ -64,9 +66,9 @@ const ProductCard = ({ product }) => {
         {product.quantity !== undefined && product.quantity !== null && (
           <p className="stock-count-text">
             {isOutOfStock ? (
-              <span className="text-out-of-stock">0 items available</span>
+              <span className="text-out-of-stock">{t('zeroAvailable')}</span>
             ) : (
-              <span className="text-in-stock">{product.quantity} available</span>
+              <span className="text-in-stock">{product.quantity} {t('itemsAvailable')}</span>
             )}
           </p>
         )}
@@ -77,7 +79,7 @@ const ProductCard = ({ product }) => {
           disabled={isOutOfStock}
           aria-label={`Add ${productName} to cart`}
         >
-          {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+          {isOutOfStock ? t('outOfStock') : t('addToCart')}
         </button>
       </div>
     </div>

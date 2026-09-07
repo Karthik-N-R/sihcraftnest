@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/AuthContext';
 import { useProducts } from '../../context/ProductContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import './dashboard.css';
@@ -12,6 +13,7 @@ export default function SellerDashboard() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, isSeller } = useAuth() || {};
   const { products = [], refreshProducts } = useProducts() || {};
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -30,7 +32,7 @@ export default function SellerDashboard() {
       <main className="dashboard-page">
         <Navbar />
         <div className="container text-center mt-xl p-xl">
-          <p className="text-gray">Loading Seller Dashboard...</p>
+          <p className="text-gray">Loading...</p>
         </div>
       </main>
     );
@@ -47,16 +49,16 @@ export default function SellerDashboard() {
         <div className="container mt-xl">
           <div className="dashboard-card text-center p-xl">
             <span style={{ fontSize: '3rem' }}>⚠️</span>
-            <h2 className="mt-md mb-xs">Artisan Seller Access Only</h2>
+            <h2 className="mt-md mb-xs">{t('sellerAccessOnly')}</h2>
             <p className="text-gray mb-lg">
-              You are currently logged in as a <strong>Buyer ({user?.name})</strong>. The seller dashboard is reserved for registered artisan sellers.
+              {t('buyerNotice', { name: user?.name })}
             </p>
             <div className="btn-group" style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
               <Link href="/login" className="btn btn-primary">
-                Switch to Seller Account
+                {t('switchToSeller')}
               </Link>
               <Link href="/shop" className="btn btn-secondary" style={{ background: '#edf2f7', color: '#2d3748', border: '1px solid #cbd5e0', padding: '10px 20px', borderRadius: '8px' }}>
-                Browse Marketplace
+                {t('browseMarketplace')}
               </Link>
             </div>
           </div>
@@ -87,12 +89,12 @@ export default function SellerDashboard() {
         {/* Header Title & Add Product Action */}
         <div className="dashboard-header-row mb-xl">
           <div>
-            <span className="badge badge-terracotta mb-xs">Artisan Portal</span>
+            <span className="badge badge-terracotta mb-xs">{t('artisanPortal')}</span>
             <h1 className="font-accent text-gradient" style={{ fontSize: '2.5rem', margin: 0 }}>
-              Seller Dashboard
+              {t('sellerDashboardTitle')}
             </h1>
             <p className="text-gray" style={{ margin: '4px 0 0 0' }}>
-              Manage your craft listings, inventory stock, and catalog.
+              {t('dashboardSub')}
             </p>
           </div>
 
@@ -101,7 +103,7 @@ export default function SellerDashboard() {
             className="btn btn-primary add-product-btn"
             onClick={() => router.push('/sell')}
           >
-            ✨ + Add New Product
+            {t('addNewProduct')}
           </button>
         </div>
 
@@ -110,7 +112,7 @@ export default function SellerDashboard() {
           <div className="stat-card">
             <div className="stat-icon">🎨</div>
             <div className="stat-details">
-              <span className="stat-label">Artisan Account</span>
+              <span className="stat-label">{t('artisanAccount')}</span>
               <h3 className="stat-value">{user.name}</h3>
               <span className="stat-subtext">{user.email}</span>
             </div>
@@ -119,29 +121,29 @@ export default function SellerDashboard() {
           <div className="stat-card">
             <div className="stat-icon">📦</div>
             <div className="stat-details">
-              <span className="stat-label">Total Listings</span>
+              <span className="stat-label">{t('totalListings')}</span>
               <h3 className="stat-value">{totalProductsCount}</h3>
-              <span className="stat-subtext">Active Craft Products</span>
+              <span className="stat-subtext">{t('activeCraftProducts')}</span>
             </div>
           </div>
 
           <div className="stat-card">
             <div className="stat-icon">📊</div>
             <div className="stat-details">
-              <span className="stat-label">Total Items in Stock</span>
+              <span className="stat-label">{t('itemsInStock')}</span>
               <h3 className="stat-value">{totalStockCount}</h3>
-              <span className="stat-subtext">Available Inventory</span>
+              <span className="stat-subtext">{t('availableInventory')}</span>
             </div>
           </div>
 
           <div className="stat-card">
             <div className="stat-icon">⚠️</div>
             <div className="stat-details">
-              <span className="stat-label">Out of Stock</span>
+              <span className="stat-label">{t('outOfStock')}</span>
               <h3 className="stat-value" style={{ color: outOfStockCount > 0 ? '#e53e3e' : 'var(--emerald)' }}>
                 {outOfStockCount}
               </h3>
-              <span className="stat-subtext">Products Requiring Restock</span>
+              <span className="stat-subtext">{t('productsRestock')}</span>
             </div>
           </div>
         </div>
@@ -149,23 +151,23 @@ export default function SellerDashboard() {
         {/* My Products Table / List */}
         <div className="dashboard-card">
           <div className="card-header-row mb-md">
-            <h2>My Published Products ({totalProductsCount})</h2>
+            <h2>{t('myPublishedProducts')} ({totalProductsCount})</h2>
             <span className="text-gray" style={{ fontSize: '0.85rem' }}>
-              Selling prices shown below reflect your actual seller set price (₹).
+              {t('sellingPriceReflects')}
             </span>
           </div>
 
           {myProducts.length === 0 ? (
             <div className="empty-dashboard text-center p-xl">
               <span style={{ fontSize: '3rem' }}>🎨</span>
-              <h3 className="mt-md mb-xs">No products published yet</h3>
-              <p className="text-gray mb-lg">Use our AI voice workflow to digitize your first craft and publish it to CraftNest.</p>
+              <h3 className="mt-md mb-xs">{t('noProductsPublishedYet')}</h3>
+              <p className="text-gray mb-lg">{t('digitizeFirstCraft')}</p>
               <button 
                 type="button" 
                 className="btn btn-primary"
                 onClick={() => router.push('/sell')}
               >
-                + Add New Product
+                {t('addNewProduct')}
               </button>
             </div>
           ) : (
@@ -173,12 +175,12 @@ export default function SellerDashboard() {
               <table className="products-table">
                 <thead>
                   <tr>
-                    <th>Product</th>
-                    <th>Category</th>
-                    <th>Seller Price (₹)</th>
-                    <th>Stock Quantity</th>
-                    <th>Inventory Status</th>
-                    <th>Actions</th>
+                    <th>{t('product')}</th>
+                    <th>{t('category')}</th>
+                    <th>{t('sellerPriceTable')}</th>
+                    <th>{t('stockQuantity')}</th>
+                    <th>{t('inventoryStatus')}</th>
+                    <th>{t('actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -210,23 +212,23 @@ export default function SellerDashboard() {
                         </td>
                         <td>
                           <span style={{ fontWeight: 600, fontSize: '1rem', color: isOut ? '#e53e3e' : '#2d3748' }}>
-                            {qtyVal} units
+                            {qtyVal}
                           </span>
                         </td>
                         <td>
                           {isOut ? (
                             <span className="stock-status-badge status-out-of-stock">
-                              ● Out of Stock
+                              {t('outOfStockStatus')}
                             </span>
                           ) : (
                             <span className="stock-status-badge status-in-stock">
-                              ● In Stock ({qtyVal})
+                              {t('inStockStatus')} ({qtyVal})
                             </span>
                           )}
                         </td>
                         <td>
                           <Link href="/shop" className="table-action-link">
-                            View in Shop ↗
+                            {t('viewInShop')}
                           </Link>
                         </td>
                       </tr>

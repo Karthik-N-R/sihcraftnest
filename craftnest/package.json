@@ -9,8 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/genai": "^2.21.0",
     "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.13.28",
+    "@imgly/background-removal": "^1.7.0",
+    "@snap-smart/core": "^1.2.2",
+    "@techstark/opencv-js": "^4.11.0-release.1",
     "next": "16.3.4",
+    "onnxruntime-web": "^1.21.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sarvamai": "^1.1.9"

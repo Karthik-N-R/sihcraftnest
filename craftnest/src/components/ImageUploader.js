@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './ImageUploader.css';
 
 export default function ImageUploader({ onImageSelect, onUpload, currentPreview }) {
+  const { t } = useLanguage();
   const [dragActive, setDragActive] = useState(false);
   const [preview, setPreview] = useState(currentPreview || null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -108,8 +110,8 @@ export default function ImageUploader({ onImageSelect, onUpload, currentPreview 
         ) : (
           <div className="upload-prompt" id="upload-prompt">
             <div className="upload-icon" id="upload-icon">📸</div>
-            <p className="upload-text" id="upload-text">Drag & drop your craft image here</p>
-            <span className="upload-subtext" id="upload-subtext">or click to browse files</span>
+            <p className="upload-text" id="upload-text">{t('dragDropCraftImage')}</p>
+            <span className="upload-subtext" id="upload-subtext">{t('orClickToBrowse')}</span>
             {errorMessage && (
               <p className="upload-error" style={{ color: 'var(--terracotta)', marginTop: '8px', fontSize: '0.9rem' }}>
                 {errorMessage}

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import VoiceRecorder from './VoiceRecorder';
 import './MissingFieldCollector.css';
 
@@ -28,12 +29,6 @@ const AUDIO_FILES = {
   }
 };
 
-const FIELD_LABELS = {
-  size: 'Size / Dimensions',
-  quantity: 'Available Quantity',
-  price: 'Selling Price (₹)'
-};
-
 export default function MissingFieldCollector({
   currentField,
   language = 'ta-IN',
@@ -47,11 +42,18 @@ export default function MissingFieldCollector({
   totalMissing = 1,
   currentIndex = 1
 }) {
+  const { t } = useLanguage();
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioError, setAudioError] = useState(null);
   const [isEditingEstimate, setIsEditingEstimate] = useState(false);
   const [editedSizeText, setEditedSizeText] = useState('');
   const audioRef = useRef(null);
+
+  const FIELD_LABELS = {
+    size: t('sizeDimensionsLabel'),
+    quantity: t('availableQuantityLabel'),
+    price: t('sellingPriceLabel')
+  };
 
   const langPrompts = PROMPTS[language] || PROMPTS['ta-IN'];
   const textPrompt = langPrompts[currentField] || langPrompts.size;
@@ -106,7 +108,7 @@ export default function MissingFieldCollector({
     if (currentField && !sizeEstimate) {
       handlePlayAudio();
     }
-        return () => {
+    return () => {
       if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
@@ -122,12 +124,12 @@ export default function MissingFieldCollector({
     return (
       <div className="missing-field-card animate-fade-in" id="missing-field-card">
         <div className="missing-field-header">
-          <span className="badge badge-terracotta">AI Estimated</span>
-          <h3>Confirm Size Measurement</h3>
+          <span className="badge badge-terracotta">{t('aiEstimated')}</span>
+          <h3>{t('confirmSizeMeasurement')}</h3>
         </div>
 
         <p className="missing-field-subtext">
-          The size was estimated from your description as:
+          {t('sizeEstimatedFromDescription')}
         </p>
 
         <div className="estimated-size-box">
@@ -136,7 +138,7 @@ export default function MissingFieldCollector({
 
         {isEditingEstimate ? (
           <div className="correct-size-form">
-            <label className="field-label">Enter exact size/dimensions:</label>
+            <label className="field-label">{t('enterExactSize')}</label>
             <input 
               type="text" 
               className="input" 
@@ -155,14 +157,14 @@ export default function MissingFieldCollector({
                   }
                 }}
               >
-                Save Exact Size
+                {t('saveExactSize')}
               </button>
               <button 
                 type="button" 
                 className="step-btn step-btn-back"
                 onClick={() => setIsEditingEstimate(false)}
               >
-                Cancel
+                {t('cancelBtn')}
               </button>
             </div>
           </div>
@@ -175,7 +177,7 @@ export default function MissingFieldCollector({
                 if (onConfirmSizeEstimate) onConfirmSizeEstimate(sizeEstimate.value);
               }}
             >
-              ✓ Confirm Size
+              {t('confirmSizeBtn')}
             </button>
             <button 
               type="button" 
@@ -185,7 +187,7 @@ export default function MissingFieldCollector({
                 setIsEditingEstimate(true);
               }}
             >
-              ✏️ Correct Size
+              {t('correctSizeBtn')}
             </button>
           </div>
         )}
@@ -197,11 +199,11 @@ export default function MissingFieldCollector({
     <div className="missing-field-card animate-fade-in" id="missing-field-card">
       <div className="missing-field-header">
         <div className="missing-field-title">
-          <span className="badge badge-terracotta">Missing Information</span>
+          <span className="badge badge-terracotta">{t('missingInformation')}</span>
           <h2>{FIELD_LABELS[currentField] || currentField}</h2>
         </div>
         {totalMissing > 1 && (
-          <span className="step-counter">Field {currentIndex} of {totalMissing}</span>
+          <span className="step-counter">{t('fieldCounter', { index: currentIndex, total: totalMissing })}</span>
         )}
       </div>
 
@@ -223,7 +225,7 @@ export default function MissingFieldCollector({
           onClick={handlePlayAudio}
           disabled={isProcessing}
         >
-          {isPlayingAudio ? '🔊 Playing...' : '🔊 Play Prompt'}
+          {isPlayingAudio ? t('playingAudio') : t('playPrompt')}
         </button>
       </div>
 
@@ -237,12 +239,12 @@ export default function MissingFieldCollector({
           <div className="craft-loader">
             <span></span><span></span><span></span><span></span>
           </div>
-          <p className="processing-text">Processing your voice response...</p>
+          <p className="processing-text">{t('processingVoiceResponse')}</p>
         </div>
       ) : (
         <div className="missing-field-voice-section">
           <p className="text-gray text-center mb-md" style={{ fontSize: '0.9rem' }}>
-            Record a short voice answer to provide the missing {FIELD_LABELS[currentField] || currentField}.
+            {t('provideMissingField', { field: FIELD_LABELS[currentField] || currentField })}
           </p>
           <VoiceRecorder 
             language={language}

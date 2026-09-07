@@ -3,11 +3,13 @@
 import Navbar from '../../components/Navbar';
 import ProductCard from '../../components/ProductCard';
 import { useProducts } from '../../context/ProductContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { useState, useEffect } from 'react';
 import './shop.css';
 
 export default function Shop() {
   const { products, refreshProducts } = useProducts();
+  const { t } = useLanguage() || {};
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {
@@ -28,14 +30,14 @@ export default function Shop() {
       
       <div className="shop-header">
         <div className="container">
-          <h1 className="mb-sm">Browse Crafts</h1>
-          <p className="text-gray">Discover unique items from artisans across the globe.</p>
+          <h1 className="mb-sm">{t('browseCrafts')}</h1>
+          <p className="text-gray">{t('discoverCrafts')}</p>
         </div>
       </div>
 
       <div className="container shop-layout">
         <aside className="shop-sidebar">
-          <h3>Categories</h3>
+          <h3>{t('categories')}</h3>
           <ul className="category-list mt-md">
             {categories.map(cat => (
               <li key={cat}>
@@ -52,11 +54,11 @@ export default function Shop() {
 
         <section className="shop-main">
           <div className="shop-controls mb-xl">
-            <p>Showing {filteredProducts.length} products</p>
+            <p>{t('showingProducts', { count: filteredProducts.length })}</p>
             <select className="input select" style={{ width: 'auto' }}>
-              <option>Sort by: Newest</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
+              <option>{t('sortByNewest')}</option>
+              <option>{t('priceLowToHigh')}</option>
+              <option>{t('priceHighToLow')}</option>
             </select>
           </div>
 
@@ -68,8 +70,8 @@ export default function Shop() {
 
           {filteredProducts.length === 0 && (
             <div className="empty-state text-center mt-xl">
-              <h3>No products found</h3>
-              <p>Try selecting a different category.</p>
+              <h3>{t('noProductsFound')}</h3>
+              <p>{t('tryDifferentCategory')}</p>
             </div>
           )}
         </section>

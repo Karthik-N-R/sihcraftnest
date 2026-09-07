@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CraftNest AI Enhancer Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #fff8f0;
+    }
+
+    button {
+      padding: 12px 20px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+
+    .images {
+      display: flex;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .box {
+      width: 45%;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 12px;
+      border: 2px solid #ddd;
+    }
+
+    #status {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>CraftNest AI Image Enhancement Test</h1>
+
+  <input type="file" id="imageInput" accept="image/*">
+
+  <br>
+
+  <button id="enhanceBtn">
+    Enhance Image
+  </button>
+
+  <div id="status"></div>
+
+  <div class="images">
+
+    <div class="box">
+      <h2>Original</h2>
+      <img id="originalImage">
+    </div>
+
+    <div class="box">
+      <h2>AI Enhanced</h2>
+      <img id="enhancedImage">
+    </div>
+
+  </div>
+
+  <script>
+    const input = document.getElementById("imageInput");
+    const button = document.getElementById("enhanceBtn");
+    const originalImage = document.getElementById("originalImage");
+    const enhancedImage = document.getElementById("enhancedImage");
+    const status = document.getElementById("status");
+
+    let selectedImage = null;
+
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        selectedImage = reader.result;
+        originalImage.src = selectedImage;
+        enhancedImage.src = "";
+        status.textContent = "Image selected.";
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    button.addEventListener("click", async () => {
+
+      if (!selectedImage) {
+        alert("Please select an image first.");
+        return;
+      }
+
+      status.textContent = "Sending image to Gemini...";
+
+      try {
+
+        const response = await fetch("/api/enhance-image", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            image: selectedImage
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Enhancement failed.");
+        }
+
+        if (!data.enhancedImage) {
+          throw new Error("Gemini returned no enhanced image.");
+        }
+
+        enhancedImage.src = data.enhancedImage;
+
+        status.textContent =
+          "✅ Enhancement completed successfully.";
+
+      } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+          "❌ Enhancement failed: " + error.message;
+      }
+    });
+  </script>
+
+</body>
+</html>
