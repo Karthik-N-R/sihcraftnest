@@ -1,98 +1,237 @@
 .navbar {
-  background-color: var(--cream);
-  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
+  background-color: var(--navbar-bg, rgba(250, 247, 242, 0.92));
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color, rgba(28, 25, 23, 0.08));
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: var(--space-md) var(--space-xl);
+  padding: 14px var(--space-xl);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: var(--container-max, 1280px);
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 
+/* 1. CRAFTNEST BRANDING / LOGO WORDMARK */
 .navbar-logo {
-  font-family: 'Caveat', cursive;
-  font-size: 2.5rem;
-  color: var(--terracotta);
   text-decoration: none;
-  font-weight: 700;
-  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
 }
 
 .navbar-logo:hover {
-  color: var(--terracotta-dark);
+  opacity: 0.85;
 }
 
+.logo-brand-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--terracotta, #c05621);
+  background: linear-gradient(135deg, var(--terracotta, #c05621), #9c4215);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Navigation Links */
 .navbar-links {
   display: flex;
-  gap: var(--space-lg);
+  align-items: center;
+  gap: 24px;
 }
 
 .nav-link {
-  font-family: 'DM Sans', sans-serif;
-  color: var(--charcoal);
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  color: var(--text-secondary, #57534E);
   text-decoration: none;
   font-weight: 500;
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
 }
 
 .nav-link:hover {
-  color: var(--coral);
+  color: var(--terracotta, #c05621);
 }
 
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: 12px;
 }
 
-.btn-sell {
-  background-color: var(--terracotta);
-  color: var(--white);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-full);
-  text-decoration: none;
-  font-family: 'DM Sans', sans-serif;
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--input-border, #E7E5E4);
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary, #1C1917);
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--terracotta, #c05621);
+  transform: scale(1.05);
+}
+
+/* UI Language Selector */
+.ui-language-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lang-globe-icon {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.lang-select-dropdown {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--input-border, #E7E5E4);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.82rem;
   font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  color: var(--text-primary, #1C1917);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.lang-select-dropdown:hover {
+  border-color: var(--terracotta, #c05621);
+}
+
+/* Sell Craft Action */
+.btn-sell {
+  background: var(--terracotta, #c05621);
+  color: #ffffff !important;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
 }
 
 .btn-sell:hover {
-  background-color: var(--terracotta-dark);
-  transform: translateY(-2px);
+  background: var(--terracotta-dark, #9c4215);
+  transform: translateY(-1px);
 }
 
+/* Cart Icon */
 .navbar-cart {
   position: relative;
-  color: var(--charcoal);
+  color: var(--text-primary, #1C1917);
   display: flex;
   align-items: center;
-  text-decoration: none;
-  transition: color 0.3s ease;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .navbar-cart:hover {
-  color: var(--terracotta);
+  color: var(--terracotta, #c05621);
+  background: var(--bg-secondary, rgba(0,0,0,0.03));
 }
 
 .cart-badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: var(--saffron);
-  color: var(--charcoal);
-  font-size: 0.75rem;
-  font-weight: bold;
-  width: 20px;
-  height: 20px;
+  top: -4px;
+  right: -4px;
+  background-color: var(--terracotta, #c05621);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-full);
+  border-radius: 10px;
+}
+
+/* User profile & logout */
+.user-profile-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-name-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary, #1C1917);
+}
+
+.user-role-badge {
+  font-size: 0.68rem;
+  text-transform: capitalize;
+}
+
+.btn-logout {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--input-border, #E7E5E4);
+  color: var(--text-secondary, #57534E);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.auth-nav-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav-auth-link {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.nav-signup-link {
+  color: var(--terracotta, #c05621);
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px var(--space-md);
+  }
+
+  .navbar-links {
+    display: none; /* Mobile menu stays lightweight */
+  }
+
+  .logo-brand-text {
+    font-size: 1.4rem;
+  }
 }
